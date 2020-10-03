@@ -17,16 +17,17 @@
             <ul>
                 {% for itor in post %}
                     <div class="callout flex-container align-center align-justify">
-                       
-                        {{itor.header}} 
-                        <h2>
-                            {{itor.post}} 
-                        </h2>
-                        
-                         <div>
-                           Pitch Rank: {{itor.GetTotalVotes}}
-                           </button>
-                         </div>
+
+                        <h3>{{itor.header}}</h3>
+						<p>{{itor.post}}</p>
+						<div>
+							<button type="button" onClick={{itor.addUpvote}}>Upvote</button>
+							<button type="button" onClick={{itor.addDownvote}}>Downvote</button>
+						</div>
+                        <div>
+							Pitch Rank: {{itor.vote}}
+                        </div>
+
                     </div>
                 {% endfor %}
             </ul>
