@@ -1,4 +1,12 @@
-# Assignment 3
-* Made text through a template variable
-* Stylized page using CSS file provided by foundation
-* Included an image static file
+# Gruvest Django Version
+
+# run these commands if we ever change code in models.py:
+'''
+python manage.py makemigrations
+python manage.py migrate
+'''
+
+# following this command which let's us use python commands w/in docker:
+'''
+docker-compose run web /bin/bash
+'''

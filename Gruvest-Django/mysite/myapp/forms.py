@@ -21,3 +21,7 @@ class postForm(forms.Form):
         post_instance.header = self.cleaned_data["header"]
         post_instance.save()
         return post_instance
+    
+
+
+

@@ -16,6 +16,7 @@ def index(request):
     
     title = "Gruvest"
     posts = models.PostModel.objects.all()
+   
     context = {
         "post":posts,
         "title":title,
