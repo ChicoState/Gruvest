@@ -17,15 +17,27 @@
             <ul>
                 {% for itor in post %}
                     <div class="callout flex-container align-center align-justify">
+
                         <h3>{{itor.header}}</h3>
 						<p>{{itor.post}}</p>
 						<div>
-							<button type="button" onClick={{itor.addUpvote}}>Upvote</button>
-							<button type="button" onClick={{itor.addDownvote}}>Downvote</button>
+                            
+                            <form action="{% url 'UpVotePost' itor.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type = "submit" name = "post_id" value="{{ itor.id }}" class="button"> Upvote</button>
+                            </form>
+                            <form action="{% url 'DownVotePost' itor.pk %}" method="POST">
+                                {% csrf_token %}
+                                <button type = "submit" name = "post_id" value="{{ itor.id }}" class="button"> Downvote</button>
+                            </form>
+							
+                            
+                           
 						</div>
                         <div>
-							Pitch Rank: {{itor.vote}}
+							Pitch Rank: {{itor.GetTotalVotes}}
                         </div>
+
                     </div>
                 {% endfor %}
             </ul>
