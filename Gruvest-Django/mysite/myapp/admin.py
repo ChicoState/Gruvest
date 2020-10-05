@@ -4,3 +4,4 @@ from . import models
 
 
 admin.site.register(models.PostModel)
+admin.site.register(models.CommentModel)
