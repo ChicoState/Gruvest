@@ -15,22 +15,30 @@ def index(request):
 
     else:
         post_form = forms.postForm()
-    title = "Gruvest"
-    posts = models.PostModel.objects.all()
-    context = {
-        "post":posts,
-        "title":title,
-        "form":post_form,
-    }
+        title = "Gruvest"
+        posts = models.PostModel.objects.all()
+        context = {
+            "post":posts,
+            "title":title,
+            "form":post_form,
+        }
     return render(request, "base.html", context = context)
 
-def UpVoteView(request, pk):
+# Creates view for upvoting
+def upVoteView(request, pk):
     post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
-    post.UpVote.add(request.user)
+    post.upVotes = post.upVotes + int(1)
+    post.save()
     return HttpResponseRedirect(reverse("main"))
+
+# Creates view for downvoting
+def downVoteView(request, pk):
+    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    post.downVotes = post.downVotes + int(1)
+    post.save()
+    return HttpResponseRedirect(reverse("main"))
+
+#def addComment(request, pk):
+#    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
     
-def DownVoteView(request, pk):
-    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
-    post.DownVote.add(request.user)
-    return HttpResponseRedirect(reverse("main"))
     

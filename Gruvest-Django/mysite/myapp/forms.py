@@ -22,6 +22,3 @@ class postForm(forms.Form):
         post_instance.save()
         return post_instance
     
-
-
-
