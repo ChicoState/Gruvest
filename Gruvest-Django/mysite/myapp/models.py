@@ -6,9 +6,7 @@ from django.urls import reverse
 class PostModel(models.Model):
     header = models.CharField(max_length=100)
     post = models.CharField(max_length=240)
-    #UpVote = models.ManyToManyField(User, related_name='pitchUp')
     upVotes = models.IntegerField(default=0)
-    #DownVote = models.ManyToManyField(User, related_name='pitchDown')
     downVotes = models.IntegerField(default=0)
 
     def __str__(self):
@@ -22,15 +20,6 @@ class PostModel(models.Model):
 
     def getTotalVotes(self):
         return self.upVotes - self.downVotes
-    '''
-    def addUpVote(self):
-        self.upVote += 1
-        return self.UpVote
-
-    def addDownVote(self):
-        self.downVote += 1
-        return self.DownVote
-    '''
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)
@@ -38,3 +27,13 @@ class CommentModel(models.Model):
     
     def __str__(self):
         return self.comment
+
+class UpvoteModel(models.Model):
+    upvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='upvote_user')
+    upvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='upvoted_post')
+
+class DownvoteModel(models.Model):
+    downvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='downvote_user')
+    downvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='downvoted_post')
+
+    
