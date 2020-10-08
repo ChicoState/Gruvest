@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.http import HttpResponseRedirect
 
 # Create your models here.
 class PostModel(models.Model):
@@ -10,7 +11,7 @@ class PostModel(models.Model):
     downVotes = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.post
+        return (self.header + "\n" + self.post)
     
     def getUpVotes(self):
         return self.upVotes
@@ -20,6 +21,9 @@ class PostModel(models.Model):
 
     def getTotalVotes(self):
         return self.upVotes - self.downVotes
+    
+    def get_absolute_url(self):
+        return HttpResponseRedirect(reverse("main"))
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)

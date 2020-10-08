@@ -13,7 +13,10 @@
     <body>
         <h1 style="text-align: center;">
             GRUVEST
-        </h1>
+		</h1>
+		<div>
+			<a href="/post">Pitch!</a>
+		</div>
 		<ul>
 			{% for pItor in post %}
 				<div class="callout flex-container align-center align-justify">
@@ -22,11 +25,11 @@
 					<div>
 						<form action="{% url 'upVotePost' pItor.pk %}" method="POST">
 							{% csrf_token %}
-							<button type = "submit" name = "post_id" value="{{ pItor.id }}" class="button"> Upvote</button>
+							<button type="submit" name="post_id" value="{{ pItor.id }}" class="button">Upvote</button>
 						</form>
 						<form action="{% url 'downVotePost' pItor.pk %}" method="POST">
 							{% csrf_token %}
-							<button type = "submit" name = "post_id" value="{{ pItor.id }}" class="button"> Downvote</button>
+							<button type="submit" name="post_id" value="{{ pItor.id }}" class="button">Downvote</button>
 						</form>
 					</div>
 					<h4>{{pItor.getTotalVotes}}</h4>
@@ -41,12 +44,6 @@
 				</div>
 			{% endfor %}
 		</ul>
-	   
-		<form action='/' method="post">
-			{% csrf_token %}
-			{{form}}  
-			<input type="submit" class="button" value="Submit"/>
-		</form>
        
         {% block content %}{% endblock %}
         <script scr="{% static "js/vendor.js" %}"></script>
