@@ -6,7 +6,7 @@
             <meta http-equiv="x-ua-compatible" content="ie=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>{{title}}</title>
-            <link rel="stylesheet" href="{% static "css/foundation.css" %}">
+			<link rel="stylesheet" href="{% static "css/foundation.css" %}">
             
             {% block css%}{% endblock %}
         </head>
@@ -14,44 +14,40 @@
         <h1 style="text-align: center;">
             GRUVEST
         </h1>
-            <ul>
-                {% for p_itor in post %}
-                    <div class="callout flex-container align-center align-justify">
-                        <h3>{{p_itor.header}}</h3>
-						<p>{{p_itor.post}}</p>
-						<div>
-                            <form action="{% url 'upVotePost' p_itor.pk %}" method="POST">
-                                {% csrf_token %}
-                                <button type = "submit" name = "post_id" value="{{ p_itor.id }}" class="button"> Upvote</button>
-                            </form>
-                            <form action="{% url 'downVotePost' p_itor.pk %}" method="POST">
-                                {% csrf_token %}
-                                <button type = "submit" name = "post_id" value="{{ p_itor.id }}" class="button"> Downvote</button>
-                            </form>
-						</div>
-                        <div>
-							Pitch Rank: {{p_itor.getTotalVotes}}
-                        </div>
-						
-						{% if p_itor.comments.all %}
-							{% for c_itor in p_itor.comments.all %}
-								<div class="callout flex-container" >
-									<p>{{c_itor.comment}}</p>
-								</div>
-							{% endfor %}
-						{% endif %}
-                    </div>
-                {% endfor %}
-            </ul>
-           
-            <form action='/' method="post">
-                {% csrf_token %}
-                {{form}}  
-                <input type="submit" class="button" value="Submit"/>
-            </form>
+		<ul>
+			{% for pItor in post %}
+				<div class="callout flex-container align-center align-justify">
+					<h3>{{pItor.header}}</h3>
+					<p>{{pItor.post}}</p>
+					<div>
+						<form action="{% url 'upVotePost' pItor.pk %}" method="POST">
+							{% csrf_token %}
+							<button type = "submit" name = "post_id" value="{{ pItor.id }}" class="button"> Upvote</button>
+						</form>
+						<form action="{% url 'downVotePost' pItor.pk %}" method="POST">
+							{% csrf_token %}
+							<button type = "submit" name = "post_id" value="{{ pItor.id }}" class="button"> Downvote</button>
+						</form>
+					</div>
+					<h4>{{pItor.getTotalVotes}}</h4>
+					
+					{% if pItor.comments.all %}
+						{% for cItor in pItor.comments.all %}
+							<div class="callout flex-container" >
+								<p>{{cItor.comment}}</p>
+							</div>
+						{% endfor %}
+					{% endif %}
+				</div>
+			{% endfor %}
+		</ul>
+	   
+		<form action='/' method="post">
+			{% csrf_token %}
+			{{form}}  
+			<input type="submit" class="button" value="Submit"/>
+		</form>
        
-        
-        
         {% block content %}{% endblock %}
         <script scr="{% static "js/vendor.js" %}"></script>
         <script scr="{% static "js/foundation.js" %}"></script>
