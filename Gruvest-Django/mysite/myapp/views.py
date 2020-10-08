@@ -12,7 +12,8 @@ PitchCreator inherits from CreateView
     is the Create operation for Pitches in the CRUD model.
 '''
 class PitchCreator(CreateView):
-    template_name = "post_pitch.html" # the associated html template
+     # the associated html template
+    template_name = "post_pitch.html"
     # specified model which this object creates
     model = models.PostModel
     # specified fields to be entered by user
