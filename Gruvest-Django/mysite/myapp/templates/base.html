@@ -30,7 +30,8 @@
 						<form action="{% url 'downVotePost' pItor.pk %}" method="POST">
 							{% csrf_token %}
 							<button type="submit" name="post_id" value="{{ pItor.id }}" class="button">Downvote</button>
-						</form>
+                        </form>
+                        <a href= "{% url 'postComment' pItor.pk %}">Comment</a>
 					</div>
 					<h4>{{pItor.getTotalVotes}}</h4>
 					

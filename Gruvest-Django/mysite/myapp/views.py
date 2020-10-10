@@ -33,25 +33,36 @@ class PitchCreator(CreateView):
     def get_success_url(self):
         return '/'
 
+class CommentCreator(CreateView):
+     # the associated html template
+    template_name = "post_comment.html"
+    # specified model which this object creates
+    model = models.CommentModel
+    # specified fields to be entered by user
+    fields = [
+        'comment'
+    ]
+    form = forms.PostCommentForm
+    
+    success_url = '/'
+
+    # error checking form
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form) # call parent object method
+    
+    def get_success_url(self):
+        return CommentCreator.success_url
 
 # Create your views here.
 def index(request):
-    if request.method == "POST":
-        post_form = forms.postForm(request.POST)
-        if post_form.is_valid():
-            post_form.save()
-            post_form = forms.postForm()
-
-    else:
-        post_form = forms.postForm()
-        title = "Gruvest"
-        posts = models.PostModel.objects.all()
-        context = {
-            "post":posts,
-            "title":title,
-            "form":post_form,
+    title = "Gruvest"
+    posts = models.PostModel.objects.all()
+    context = {
+        "post":posts,
+        "title":title,
         }
-        return render(request, "base.html", context = context)
+    return render(request, "base.html", context = context)
 
 # Creates view for upvoting
 def upVoteView(request, pk):
