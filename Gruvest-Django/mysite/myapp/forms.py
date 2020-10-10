@@ -21,4 +21,16 @@ class postForm(forms.Form):
         post_instance.header = self.cleaned_data["header"]
         post_instance.save()
         return post_instance
-    
+
+# Class used by PitchCreator
+class PostPitchForm(forms.ModelForm):
+
+    # meta class
+    class Meta:
+        # model to be used
+        model = models.PostModel
+        # fields to be used
+        fields = [
+            "header",
+            "post",
+        ]
