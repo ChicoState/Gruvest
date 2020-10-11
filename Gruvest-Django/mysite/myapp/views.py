@@ -33,6 +33,11 @@ class PitchCreator(CreateView):
     def get_success_url(self):
         return '/'
 
+'''
+class PitchDetail(DetailView):
+    template_name = "view_pitch.html"
+    model = models.
+'''
 
 # Create your views here.
 def index(request):
@@ -44,14 +49,14 @@ def index(request):
 
     else:
         post_form = forms.postForm()
-        title = "Gruvest"
-        posts = models.PostModel.objects.all()
-        context = {
-            "post":posts,
-            "title":title,
-            "form":post_form,
-        }
-        return render(request, "base.html", context = context)
+    title = "Gruvest"
+    posts = models.PostModel.objects.all()
+    context = {
+        "post":posts,
+        "title":title,
+        "form":post_form,
+    }
+    return render(request, "base.html", context = context)
 
 # Creates view for upvoting
 def upVoteView(request, pk):
