@@ -1,5 +1,5 @@
 <div>
-    <form action="{% url 'postPitch' %}" method="post">
+    <form action="{% url 'postPitch'  %}" method="post">
         {% csrf_token %}
         {{form}}
         <input type="submit" class="button" value="Submit" />

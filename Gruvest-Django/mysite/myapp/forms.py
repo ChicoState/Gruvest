@@ -34,3 +34,15 @@ class PostPitchForm(forms.ModelForm):
             "header",
             "post",
         ]
+
+# Class used by CommentCreator
+class PostCommentForm(forms.ModelForm):
+
+    # meta class
+    class Meta:
+        # model to be used
+        model = models.CommentModel
+        # fields to be used
+        fields = [
+           "comment",
+        ]

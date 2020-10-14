@@ -32,6 +32,9 @@ class CommentModel(models.Model):
     def __str__(self):
         return self.comment
 
+    def get_absolute_url(self):
+        return HttpResponseRedirect(reverse_lazy("main"))
+
 class UpvoteModel(models.Model):
     upvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='upvote_user')
     upvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='upvoted_post')
