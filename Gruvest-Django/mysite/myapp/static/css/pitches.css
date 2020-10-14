@@ -1,0 +1,87 @@
+.pitch-list-column
+{
+    background-color: silver;
+    width: 800px;
+    height: 100%;
+    margin: auto;
+}
+
+.net-votes
+{
+    font-size: 20px;
+    color: black;
+    float: left;
+}
+
+.pitch-list
+{
+    width: 60%;
+    margin:auto;
+}
+
+.voting-buttons
+{
+    float: left;
+}
+
+.voting-buttons button{
+    border: 1px black;
+    padding: 5px 5px;
+    cursor: pointer; /* Pointer/hand icon */
+    margin: none;
+    /*width: 50%;*/
+    display: block; /* Make the buttons appear below each other */
+    float: left;
+}
+  
+.voting-buttons button:not(:last-child)
+{
+    border-right: none; /* Prevent double borders */
+}
+  
+/* Add a background color on hover */
+.voting-buttons button:hover
+{
+    background-color: silver;
+}
+
+#upvote-button
+{
+    font-style: bold;
+}
+#upvote-button:hover
+{
+    color: white;
+    background-color: springgreen;
+}
+
+#downvote-button
+{
+    font-style: bold;
+}
+#downvote-button:hover
+{
+    color: white;
+    background-color: grey;
+}
+
+.abstracted-pitch-info
+{
+    font-family: Tahoma, Geneva, sans-serif;
+    border-style: solid;
+    border-color: gainsboro;
+    border-radius: 10px;
+    padding: 0px;
+    font-size: 25px;
+    height: 80px;
+    background-color: GhostWhite;
+    margin:auto;
+}
+
+#pitch-title
+{
+    text-align: center;
+    color: dodgerblue;
+    float: left;
+    padding: 0px 10px;
+}

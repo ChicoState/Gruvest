@@ -12,7 +12,7 @@ PitchCreator inherits from CreateView
     is the Create operation for Pitches in the CRUD model.
 '''
 class PitchCreator(CreateView):
-     # the associated html template
+    # the associated html template
     template_name = "post_pitch.html"
     # specified model which this object creates
     model = models.PostModel
@@ -33,6 +33,22 @@ class PitchCreator(CreateView):
     def get_success_url(self):
         return '/'
 
+'''
+PitchDetail inherits from DetailView
+    is a Retrieve operation
+'''
+class PitchDetail(DetailView):
+    template_name = "view_pitch.html"
+    model = models.PostModel
+
+'''
+ListPitches inherits from ListView
+    eventually this can replace parts of def index()
+    see http://localhost/list/ for demo
+'''
+class PitchList(ListView):
+    template_name = "pitches.html"
+    model = models.PostModel
 
 # Create your views here.
 def index(request):
