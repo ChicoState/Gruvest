@@ -1,4 +1,23 @@
-<div>
-    <h1>{{p.header}}</h1>
-    <p>{{p.post}}</p>
+<div class="callout flex-container align-center align-justify">
+    <h3>{{object.header}}</h3>
+    <p>{{object.post}}</p>
+    <div>
+        <form action="{% url 'upVotePost' object.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" name="post_id" value="{{ object.id }}" class="button">Upvote</button>
+        </form>
+        <form action="{% url 'downVotePost' object.pk %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" name="post_id" value="{{ object.id }}" class="button">Downvote</button>
+        </form>
+    </div>
+    <h4>{{object.getTotalVotes}}</h4>
+
+    {% if object.comments.all %}
+    {% for cItor in object.comments.all %}
+    <div class="callout flex-container">
+        <p>{{cItor.comment}}</p>
+    </div>
+    {% endfor %}
+    {% endif %}
 </div>

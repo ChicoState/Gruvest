@@ -1,53 +1,51 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-     <head>
-            <meta charset="utf-8" />
-            <meta http-equiv="x-ua-compatible" content="ie=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>{{title}}</title>
-			<link rel="stylesheet" href="{% static "css/foundation.css" %}">
-            
-            {% block css%}{% endblock %}
-        </head>
-    <body>
-        <h1 style="text-align: center;">
-            GRUVEST
-		</h1>
-		<div>
-			<a href="/post">Pitch!</a>
-		</div>
-		<ul>
-			{% for pItor in post %}
-				<div class="callout flex-container align-center align-justify">
-					<h3>{{pItor.header}}</h3>
-					<p>{{pItor.post}}</p>
-					<div>
-						<form action="{% url 'upVotePost' pItor.pk %}" method="POST">
-							{% csrf_token %}
-							<button type="submit" name="post_id" value="{{ pItor.id }}" class="button">Upvote</button>
-						</form>
-						<form action="{% url 'downVotePost' pItor.pk %}" method="POST">
-							{% csrf_token %}
-							<button type="submit" name="post_id" value="{{ pItor.id }}" class="button">Downvote</button>
-						</form>
-					</div>
-					<h4>{{pItor.getTotalVotes}}</h4>
-					
-					{% if pItor.comments.all %}
-						{% for cItor in pItor.comments.all %}
-							<div class="callout flex-container" >
-								<p>{{cItor.comment}}</p>
-							</div>
-						{% endfor %}
-					{% endif %}
-				</div>
-			{% endfor %}
-		</ul>
-       
-        {% block content %}{% endblock %}
-        <script scr="{% static "js/vendor.js" %}"></script>
-        <script scr="{% static "js/foundation.js" %}"></script>
-        {% block stripts %}{% endblock %}
-    </body>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{title}}</title>
+	<link rel="stylesheet" href="{% static 'css/pitches.css' %}">
+
+	{% block css%}{% endblock %}
+</head>
+
+<body>
+	<h1 style="text-align: center;">
+		GRUVEST
+	</h1>
+	<div>
+		<a href="/post">Pitch!</a>
+	</div>
+    <ul class="pitch-list-column">
+        {% for pItor in post %}
+        <p class="net-votes">{{pItor.getTotalVotes}}</p>
+        <div class="pitch-list">
+            <div class="voting-buttons">
+                <form action="{% url 'upVotePost' pItor.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ pItor.id }}" id="upvote-button"
+                        style='font-size:25px;'>&#8593</button>
+                </form>
+                <form action="{% url 'downVotePost' pItor.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ pItor.id }}" id="downvote-button"
+                        style='font-size:25px;'>&#8595</button>
+                </form>
+            </div>
+            <div class="abstracted-pitch-info">
+                <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </ul>
+
+	{% block content %}{% endblock %}
+	<script scr="{% static "js/vendor.js" %}"></script>
+	<script scr="{% static "js/foundation.js" %}"></script>
+	{% block stripts %}{% endblock %}
+</body>
+
 </html>
