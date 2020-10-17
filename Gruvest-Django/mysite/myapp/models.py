@@ -9,6 +9,7 @@ class PostModel(models.Model):
     post = models.CharField(max_length=240)
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
+    cost = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return (self.header + "\n" + self.post)
@@ -27,7 +28,7 @@ class PostModel(models.Model):
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)
-    post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='comments')
     
     def __str__(self):
         return self.comment
@@ -43,4 +44,6 @@ class DownvoteModel(models.Model):
     downvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='downvote_user')
     downvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='downvoted_post')
 
-    
+class CatcherModel(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    funds = models.PositiveIntegerField(default = 0, verbose_name= 'Add amount')

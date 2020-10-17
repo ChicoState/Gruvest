@@ -19,12 +19,60 @@ class PitchCreator(CreateView):
     # specified fields to be entered by user
     fields = [
         'header',
-        'post'
+        'post',
+        'cost'
     ]
     form = forms.PostPitchForm
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = '/'
 
+    # error checking form
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form) # call parent object method
+    
+    def get_success_url(self):
+        return '/'
+
+class CommentCreator(CreateView):
+    # the associated html template
+    template_name = "post_comment.html"
+    # specified model which this object creates
+    model = models.CommentModel
+    # specified fields to be entered by user
+    fields = [
+        "comment"
+    ]
+    form = forms.PostCommentForm
+    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    success_url = '/'
+    # error checking form
+    def form_valid(self, form):
+        form.instance.post_id = self.kwargs['pk']
+        return super().form_valid(form) # call parent object method
+    
+    def get_success_url(self):
+        return '/'
+
+class AddFunds(UpdateView):
+    # the associated html template
+    template_name = "add_funds.html"
+    # specified model which this object creates
+    model = models.CatcherModel
+    # specified fields to be entered by user
+    fields = [
+        'funds'
+    ]
+    form = forms.AddFundsForm
+    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if form.is_valid():
+            request.user.catchermodel.funds += int(form['funds'].value())
+            request.user.catchermodel.save()
+        return HttpResponseRedirect(reverse("main"))
     # error checking form
     def form_valid(self, form):
         print(form.cleaned_data)
@@ -40,6 +88,18 @@ PitchDetail inherits from DetailView
 class PitchDetail(DetailView):
     template_name = "view_pitch.html"
     model = models.PostModel
+'''
+    def get(self, request, *args, **kwargs):
+        currentFunds = request.user.catchermodel.funds
+        #form.instance.post_id = self.kwargs['pk']
+        post = get_object_or_404(models.PostModel, id=request.POST.get(self.kwargs['pk']))
+        if (currentFunds >= post.cost):
+            request.user.catchermodel.funds -= post.cost
+            request.user.catchermodel.save()
+            return render(request, template_name)
+        else:
+            return HttpResponseRedirect(reverse("main"))
+   '''
 
 '''
 ListPitches inherits from ListView
@@ -52,20 +112,12 @@ class PitchList(ListView):
 
 # Create your views here.
 def index(request):
-    if request.method == "POST":
-        post_form = forms.postForm(request.POST)
-        if post_form.is_valid():
-            post_form.save()
-            post_form = forms.postForm()
-
-    else:
-        post_form = forms.postForm()
     title = "Gruvest"
     posts = models.PostModel.objects.all()
+    sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
     context = {
-        "post":posts,
+        "post":sortedPosts,
         "title":title,
-        "form":post_form,
     }
     return render(request, "base.html", context = context)
 
@@ -135,5 +187,3 @@ def downVoteView(request, pk):
         post.save()
     return HttpResponseRedirect(reverse("main"))
 
-#def addComment(request, pk):
-#    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
