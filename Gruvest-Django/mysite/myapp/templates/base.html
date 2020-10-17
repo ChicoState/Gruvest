@@ -17,7 +17,9 @@
 		GRUVEST
 	</h1>
 	<div>
-		<a href="/post">Pitch!</a>
+        <a href="/post">Pitch!</a>
+        <a href="{% url 'addFunds' user.id %}">Add Money</a>
+        Current Funds: ${{ user.catchermodel.funds }}
 	</div>
     <ul class="pitch-list-column">
         {% for pItor in post %}
@@ -38,6 +40,7 @@
             <div class="abstracted-pitch-info">
                 <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
             </div>
+            <a href="{% url 'postComment' pItor.pk %}">Comment</a>
         </div>
         {% endfor %}
     </ul>
