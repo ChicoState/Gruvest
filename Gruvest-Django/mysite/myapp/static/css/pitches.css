@@ -80,6 +80,13 @@
     margin:auto;
 }
 
+#abstracted-pitch-info-cost
+{
+    float: right;
+    color: grey;
+    margin: 0px 5px;
+}
+
 #pitch-title
 {
     color: dodgerblue;

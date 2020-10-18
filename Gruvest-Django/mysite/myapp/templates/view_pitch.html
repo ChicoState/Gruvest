@@ -5,12 +5,36 @@
 <head>
 
     <head>
+        <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
         <link rel="stylesheet" href="{% static 'css/view_pitch.css' %}">
+        <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
         {% block css%}{% endblock %}
     </head>
 </head>
 
 <body>
+    <div class="top-bar topbar-center-logo" id="topbar-center-logo">
+        <div class="top-bar-left">
+            <ul class="menu vertical medium-horizontal">
+                <li>
+                    <a href="/">
+                        <p class="logo">GRUVEST</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="account">
+            <ul class="menu vertical medium-horizontal">
+                <li><a href="#">Welcome: {{user.username}}</a></li>
+                <li><a href="/post">Pitch!</a></li>
+                <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+            </ul>
+        </div>
+    </div>
+    <div>
+        Current Funds: ${{ user.catchermodel.funds }}
+    </div>
+
     <div class="detail-page">
         <p class="net-votes">{{object.getTotalVotes}}</p>
         <div class="pitch-list">
@@ -36,6 +60,7 @@
                     <p id="pitch-post">{{object.post}}</p>
                 </div>
             </div>
+            <a href="{% url 'postComment' object.pk %}">Comment</a>
             <div class="pitch-comments">
                 {% if object.comments.all %}
                 {% for cItor in object.comments.all %}
@@ -48,3 +73,6 @@
 </body>
 
 </html>
+
+<script scr="{% static 'js/vendor.js' %}"></script>
+<script scr="{% static 'js/foundation.js' %}"></script>

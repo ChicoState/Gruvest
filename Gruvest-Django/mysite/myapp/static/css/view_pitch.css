@@ -8,15 +8,15 @@
 
 .net-votes
 {
-    font-size: 20px;
+    font-size: 15px;
     color: black;
-    margin: 15px;
+    margin: 20px;
     float: left;
 }
 
 .pitch-list
 {
-    width: 90%;
+    width: 80%;
     margin:auto;
 }
 
@@ -75,7 +75,7 @@
     padding: 0px;
     font-size: 15px;
     min-height: 200px;
-    background-color: GhostWhite;
+    background-color: ghostwhite;
     margin:auto;
 }
 
@@ -128,4 +128,7 @@
 {
     margin:10px;
     padding: 5px;
+    background-color: ghostwhite;
+    border-style: none none none solid;
+    border-color: cornflowerblue;
 }

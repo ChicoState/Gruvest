@@ -1,19 +1,31 @@
-.topbar-center-logo {
-    background: #2c3840;
-    background-color: #e6e6e6;
-}
-
 .topbar-center-logo .menu {
-    background: #2c3840;
-    background-color: lightcoral;
+    background-color: springgreen;
+    padding: 0px;
 }
   
 .topbar-center-logo .menu a {
-    color: aqua;
+    background-color: springgreen;
+    color: black;
 }
   
 .topbar-center-logo .top-bar-center {
     -webkit-flex: 1 0 auto;
     -ms-flex: 1 0 auto;
     flex: 1 0 auto;
+}
+
+.logo
+{
+    text-align: center;
+    font-size: 20px;
+    font-style: bold; 
+    background-color:salmon;
+    color: black;
+    padding: 5px;
+}
+
+.account
+{
+    background-color: springgreen;
+    padding: 21px;
 }

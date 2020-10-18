@@ -1,46 +1,51 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
-        <link rel="stylesheet" href="{% static 'css/floating.css' %}">
-        <link rel="stylesheet" href="{% static 'css/post.css' %}">
-        <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
-    </head>
 
-    <a href="/">
-        <h1 style="text-align: center; color:salmon;">
-            GRUVEST
-        </h1>
-    </a>
-    <div class="top-bar topbar-center-logo" id="topbar-center-logo">
-        <div class="top-bar-left">
-          <ul class="menu vertical medium-horizontal">
-            <li><a href="/post">Pitch!</a></li>
-           <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
-          </ul>
-        </div>
-        <div class="top-bar-right">
-          <ul class="menu vertical medium-horizontal">
-            <li><a href="#">Welcome: {{user.username}}</a></li>
-          </ul>
-        </div>
-      </div>
+<head>
+  <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+  <link rel="stylesheet" href="{% static 'css/floating.css' %}">
+  <link rel="stylesheet" href="{% static 'css/post.css' %}">
+  <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
+</head>
+
+<div class="top-bar topbar-center-logo" id="topbar-center-logo">
+  <div class="top-bar-left">
+    <ul class="menu vertical medium-horizontal">
+      <li>
+        <a href="/">
+          <p class="logo">GRUVEST</p>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="account">
+    <ul class="menu vertical medium-horizontal">
+      <li><a href="#">Welcome: {{user.username}}</a></li>
+      <li><a href="/post">Pitch!</a></li>
+      <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+    </ul>
+  </div>
+</div>
 <div>
-    <div class="grid-x grid-padding-x">
-    <div class="large-8 medium-8 small-12 large-offset-2 medium-offset-4 cell">
+  Current Funds: ${{ user.catchermodel.funds }}
+</div>
+
+<div class="grid-x grid-padding-x">
+  <div class="large-8 medium-8 small-12 large-offset-2 medium-offset-4 cell">
     <form method="post" class="callout text-center">
-        <h2>Add Funds</h2>
-        <div class="text-left">
-            {% csrf_token %}
-            {{form}}
-            <input type="submit" class="button button-enter"  value="Submit" />
-        </div>
-        
+      <h2>Add Funds</h2>
+      <div class="text-left">
+        {% csrf_token %}
+        {{form}}
+        <input type="submit" class="button button-enter" value="Submit" />
+      </div>
+
     </form>
+  </div>
 </div>
 </div>
-</div>
+
 </html>
 
 <script scr="{% static 'js/vendor.js' %}"></script>
