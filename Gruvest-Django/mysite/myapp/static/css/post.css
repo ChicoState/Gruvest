@@ -1,0 +1,39 @@
+
+.floated-label-wrapper {
+    position: relative;
+    
+  }
+  
+    
+  .floated-label-wrapper label input[type=text] {
+    border-radius: 4px;
+    font-size: 1.75em;
+    padding: 0.5em;
+    margin:auto;
+  }
+  
+  .floated-label-wrapper label.show {
+    opacity: 1;
+    top: -0.85rem;
+    z-index: 1;
+    transition: all 0.15s ease-in;
+  }
+  
+  .button-enter {
+    border: 2px solid royalblue;
+    background-color: transparent;
+    text-decoration: none;
+    padding: 1rem;
+    position: relative;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-block;
+    border-radius: 3rem;
+    color: black;
+    transition: all ease 0.4s;
+  }
+
+  .button-enter:hover {
+    border-color: royalblue;
+    background-color: springgreen;
+  }
