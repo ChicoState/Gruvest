@@ -1,0 +1,23 @@
+
+.topbar-center-logo {
+    background: #2c3840;
+    background-color: #e6e6e6;
+   
+  }
+
+  .topbar-center-logo .menu {
+    background: #2c3840;
+    background-color: lightcoral;
+  }
+  
+  .topbar-center-logo .menu a {
+    color: aqua;
+  }
+  
+  .topbar-center-logo .top-bar-center {
+    -webkit-flex: 1 0 auto;
+        -ms-flex: 1 0 auto;
+            flex: 1 0 auto;
+  }
+  
+ 

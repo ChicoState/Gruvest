@@ -44,6 +44,10 @@ class DownvoteModel(models.Model):
     downvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='downvote_user')
     downvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='downvoted_post')
 
+class PurchaseModel(models.Model):
+    purchaser = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchase_user')
+    purchasedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='purchased_post')
+
 class CatcherModel(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     funds = models.PositiveIntegerField(default = 0, verbose_name= 'Add amount')

@@ -88,18 +88,31 @@ PitchDetail inherits from DetailView
 class PitchDetail(DetailView):
     template_name = "view_pitch.html"
     model = models.PostModel
-'''
+
     def get(self, request, *args, **kwargs):
         currentFunds = request.user.catchermodel.funds
-        #form.instance.post_id = self.kwargs['pk']
-        post = get_object_or_404(models.PostModel, id=request.POST.get(self.kwargs['pk']))
-        if (currentFunds >= post.cost):
+        purchased = False
+        post = get_object_or_404(models.PostModel, id=self.kwargs['pk'])
+        try:
+            models.PurchaseModel.objects.get(purchasedPost = post, purchaser=request.user)
+            purchased = True
+        except models.PurchaseModel.DoesNotExist:
+            pass
+        if(currentFunds >= post.cost and purchased == False):
+            models.PurchaseModel.objects.create(purchasedPost = post, purchaser=request.user)
             request.user.catchermodel.funds -= post.cost
             request.user.catchermodel.save()
-            return render(request, template_name)
+            context = {
+                'object': post
+            }
+            return render(request, "view_pitch.html", context = context)
+        elif(purchased == True):
+            context = {
+                'object': post
+            }
+            return render(request, "view_pitch.html", context = context)
         else:
             return HttpResponseRedirect(reverse("main"))
-   '''
 
 '''
 ListPitches inherits from ListView
@@ -152,7 +165,7 @@ def upVoteView(request, pk):
         like.delete()
         post.upVotes = post.upVotes - int(1)
         post.save()
-    return HttpResponseRedirect(reverse("main"))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 # Creates view for downvoting
 def downVoteView(request, pk):
@@ -185,5 +198,5 @@ def downVoteView(request, pk):
         dislike.delete()
         post.downVotes = post.downVotes - int(1)
         post.save()
-    return HttpResponseRedirect(reverse("main"))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 

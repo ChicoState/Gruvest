@@ -2,6 +2,7 @@
     <h3>{{object.header}}</h3>
     <p>{{object.post}}</p>
     <p> cost: {{object.cost}}</p>
+    
     <div>
         <form action="{% url 'upVotePost' object.pk %}" method="POST">
             {% csrf_token %}
@@ -12,6 +13,7 @@
             <button type="submit" name="post_id" value="{{ object.id }}" class="button">Downvote</button>
         </form>
     </div>
+
     <h4>Total Votes: {{object.getTotalVotes}}</h4>
 
     {% if object.comments.all %}

@@ -7,18 +7,35 @@
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>{{title}}</title>
-	<link rel="stylesheet" href="{% static 'css/pitches.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pitches.css' %}">
+    <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+   
 
 	{% block css%}{% endblock %}
 </head>
 
+    <a href="/">
+    <h1 style="text-align: center; color:salmon;">
+        GRUVEST
+    </h1>
+</a>
+
 <body>
-	<h1 style="text-align: center;">
-		GRUVEST
-	</h1>
+    <div class="top-bar topbar-center-logo" id="topbar-center-logo">
+        <div class="top-bar-left">
+          <ul class="menu vertical medium-horizontal">
+            <li><a href="/post">Pitch!</a></li>
+           <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+          </ul>
+        </div>
+        <div class="top-bar-right">
+          <ul class="menu vertical medium-horizontal">
+            <li><a href="#">Welcome: {{user.username}}</a></li>
+          </ul>
+        </div>
+      </div>
 	<div>
-        <a href="/post">Pitch!</a>
-        <a href="{% url 'addFunds' user.id %}">Add Money</a>
         Current Funds: ${{ user.catchermodel.funds }}
 	</div>
     <ul class="pitch-list-column">
@@ -39,6 +56,7 @@
             </div>
             <div class="abstracted-pitch-info">
                 <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
+                Cost: {{pItor.cost}}
             </div>
             <a href="{% url 'postComment' pItor.pk %}">Comment</a>
         </div>
