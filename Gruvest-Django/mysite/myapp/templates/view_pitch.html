@@ -1,26 +1,78 @@
-<div class="callout flex-container align-center align-justify">
-    <h3>{{object.header}}</h3>
-    <p>{{object.post}}</p>
-    <p> cost: {{object.cost}}</p>
-    
+<!DOCTYPE html>
+<html>
+{% load static %}
+
+<head>
+
+    <head>
+        <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+        <link rel="stylesheet" href="{% static 'css/view_pitch.css' %}">
+        <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
+        {% block css%}{% endblock %}
+    </head>
+</head>
+
+<body>
+    <div class="top-bar topbar-center-logo" id="topbar-center-logo">
+        <div class="top-bar-left">
+            <ul class="menu vertical medium-horizontal">
+                <li>
+                    <a href="/">
+                        <p class="logo">GRUVEST</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="account">
+            <ul class="menu vertical medium-horizontal">
+                <li><a href="#">Welcome: {{user.username}}</a></li>
+                <li><a href="/post">Pitch!</a></li>
+                <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+            </ul>
+        </div>
+    </div>
     <div>
-        <form action="{% url 'upVotePost' object.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" name="post_id" value="{{ object.id }}" class="button">Upvote</button>
-        </form>
-        <form action="{% url 'downVotePost' object.pk %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" name="post_id" value="{{ object.id }}" class="button">Downvote</button>
-        </form>
+        Current Funds: ${{ user.catchermodel.funds }}
     </div>
 
-    <h4>Total Votes: {{object.getTotalVotes}}</h4>
-
-    {% if object.comments.all %}
-    {% for cItor in object.comments.all %}
-    <div class="callout flex-container">
-        <p>{{cItor.comment}}</p>
+    <div class="detail-page">
+        <p class="net-votes">{{object.getTotalVotes}}</p>
+        <div class="pitch-list">
+            <div class="voting-buttons">
+                <form action="{% url 'upVotePost' object.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ object.id }}" id="upvote-button"
+                        style='font-size:25px;'>&#8593</button>
+                </form>
+                <form action="{% url 'downVotePost' object.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ object.id }}" id="downvote-button"
+                        style='font-size:25px;'>&#8595</button>
+                </form>
+            </div>
+            <div class="pitch-info">
+                <div>
+                    <p id="pitch-title">{{object.header}}</p>
+                    <p id="pitch-cost"> cost: {{object.cost}}</p>
+                </div>
+                <br>
+                <div>
+                    <p id="pitch-post">{{object.post}}</p>
+                </div>
+            </div>
+            <a href="{% url 'postComment' object.pk %}">Comment</a>
+            <div class="pitch-comments">
+                {% if object.comments.all %}
+                {% for cItor in object.comments.all %}
+                <p id="comment">{{cItor.comment}}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    {% endif %}
-</div>
+</body>
+
+</html>
+
+<script scr="{% static 'js/vendor.js' %}"></script>
+<script scr="{% static 'js/foundation.js' %}"></script>
