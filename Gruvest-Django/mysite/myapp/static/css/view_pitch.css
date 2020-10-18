@@ -1,16 +1,16 @@
-.pitch-list-column
+.detail-page
 {
     background-color: silver;
-    width: 1000px;
+    width: 1200px;
     height: 100%;
     margin: auto;
 }
 
 .net-votes
 {
-    font-size: 20px;
+    font-size: 15px;
     color: black;
-    margin: 15px;
+    margin: 20px;
     float: left;
 }
 
@@ -66,30 +66,69 @@
     background-color: grey;
 }
 
-.abstracted-pitch-info
+.pitch-info
 {
     font-family: Tahoma, Geneva, sans-serif;
     border-style: solid;
     border-color: gainsboro;
-    border-radius: 10px;
+    border-radius: 20px;
     padding: 0px;
-    font-size: 25px;
-    min-height: 80px;
-    height: 100%;
-    background-color: GhostWhite;
+    font-size: 15px;
+    min-height: 200px;
+    background-color: ghostwhite;
     margin:auto;
-}
-
-#abstracted-pitch-info-cost
-{
-    float: right;
-    color: grey;
-    margin: 0px 5px;
 }
 
 #pitch-title
 {
     color: dodgerblue;
     float: left;
-    padding: 0px 10px;
+    font-size:25px;
+    font-style: bold;
+    margin:0px;
+    padding: 3px 10px;
+}
+/*
+#pitch-header
+{
+    background-color: #dd1d08;
+}*/
+
+#pitch-post
+{
+    background-color: gainsboro;
+    padding: 30px 20px;
+    margin: 20px 0px 0px 20px;
+    border-radius: 0px 0px 15px 0px;
+}
+
+#pitch-cost
+{
+    font-size: 25px;
+    float: right;
+    font-size:25px;
+    font-style: bold;
+    margin:0px;
+    padding: 3px 10px;
+}
+
+.pitch-comments
+{
+    font-size: 15px;
+    font-family: Tahoma, Geneva, sans-serif;
+    border-radius: 10px;
+    padding: 0px;
+    width: 96%;
+    height: 100%;
+    background-color: gainsboro;
+    margin:auto;
+}
+
+#comment
+{
+    margin:10px;
+    padding: 5px;
+    background-color: ghostwhite;
+    border-style: none none none solid;
+    border-color: cornflowerblue;
 }

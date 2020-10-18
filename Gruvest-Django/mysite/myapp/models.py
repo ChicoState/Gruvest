@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 # Create your models here.
 class PostModel(models.Model):
     header = models.CharField(max_length=100)
-    post = models.CharField(max_length=240)
+    post = models.CharField(max_length=5000)
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
     cost = models.PositiveIntegerField(default=1)
