@@ -26,42 +26,27 @@
         </div>
         <div class="account">
             <ul class="menu vertical medium-horizontal">
+                {% if user.is_authenticated %}
+                   <li> <a href="/logout/">Logout</a> </li>
+                {% else %}
+                  <li> <a href="/login/">Login</a> </li>
+                {% endif %}
+                {% if user.is_authenticated %}
                 <li><a href="#">Welcome: {{user.username}}</a></li>
+            {% else %}
+                <li><a>Welcome: Guest</a></li>
+            {% endif %}
                 <li><a href="/post">Pitch!</a></li>
+                {% if user.is_authenticated %}
                 <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+                {% endif %}
+
             </ul>
         </div>
     </div>
-    <div>
-        Current Funds: ${{ user.catchermodel.funds }}
-    </div>
-
-    <ul class="pitch-list-column">
-        {% for pItor in post %}
-        <p class="net-votes">{{pItor.getTotalVotes}}</p>
-        <div class="pitch-list">
-            <div class="voting-buttons">
-                <form action="{% url 'upVotePost' pItor.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" name="post_id" value="{{ pItor.id }}" id="upvote-button"
-                        style='font-size:25px;'>&#8593</button>
-                </form>
-                <form action="{% url 'downVotePost' pItor.pk %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" name="post_id" value="{{ pItor.id }}" id="downvote-button"
-                        style='font-size:25px;'>&#8595</button>
-                </form>
-            </div>
-            <div class="abstracted-pitch-info">
-                <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
-                <p id="abstracted-pitch-info-cost">Cost: {{pItor.cost}}</p>
-            </div>
-            <br>
-        </div>
-        {% endfor %}
-    </ul>
-
+    
     {% block content %}{% endblock %}
+    
     <script scr="{% static "js/vendor.js" %}"></script>
     <script scr="{% static "js/foundation.js" %}"></script>
     {% block stripts %}{% endblock %}

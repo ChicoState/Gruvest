@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', views.index, name= 'main'),
@@ -10,5 +11,8 @@ urlpatterns = [
     path('dislike/<int:pk>', views.downVoteView, name='downVotePost'),
     path('fund/<int:pk>', views.AddFunds.as_view(), name='addFunds'),
     path('comment/<int:pk>', views.CommentCreator.as_view(), name='postComment'),
-    
+    path('login/', auth_views.LoginView.as_view()),
+    path('register/', views.register),
+    path('logout/', views.logout_view),
+
 ]

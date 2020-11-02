@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    {% if user.is_authenticated %}
+    Current Funds: ${{ user.catchermodel.funds }}
+    {% else %}
+    Current Funds: $0
+    {% endif %}
+</div>
+
+<ul class="pitch-list-column">
+    {% for pItor in post %}
+    <p class="net-votes">{{pItor.getTotalVotes}}</p>
+    <div class="pitch-list">
+        <div class="voting-buttons">
+            <form action="{% url 'upVotePost' pItor.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" name="post_id" value="{{ pItor.id }}" id="upvote-button"
+                    style='font-size:25px;'>&#8593</button>
+            </form>
+            <form action="{% url 'downVotePost' pItor.pk %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" name="post_id" value="{{ pItor.id }}" id="downvote-button"
+                    style='font-size:25px;'>&#8595</button>
+            </form>
+        </div>
+        <div class="abstracted-pitch-info">
+            <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
+            <p id="abstracted-pitch-info-cost">Cost: {{pItor.cost}}</p>
+        </div>
+        <br>
+    </div>
+    {% endfor %}
+</ul>
+</div>
+{% endblock %}
