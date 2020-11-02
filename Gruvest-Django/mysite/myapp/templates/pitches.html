@@ -1,8 +1,11 @@
-<!DOCTYPE html>
-<html>
-{% load static %}
 
+{% extends "base.html" %}
+{% load static %}
+<!DOCTYPE html>
+
+{% block content %}
 <head>
+    {% block title %}pitches{% endblock %}
     <link rel="stylesheet" href="{% static 'css/pitches.css' %}">
     {% block css%}{% endblock %}
 </head>
@@ -32,4 +35,4 @@
     </ul>
 </body>
 
-</html>
+{% endblock %}
