@@ -1,34 +1,7 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-  <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
-  <link rel="stylesheet" href="{% static 'css/post.css' %}">
-  <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
-</head>
-
-<div class="top-bar topbar-center-logo" id="topbar-center-logo">
-  <div class="top-bar-left">
-    <ul class="menu vertical medium-horizontal">
-      <li>
-        <a href="/">
-          <p class="logo">GRUVEST</p>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="account">
-    <ul class="menu vertical medium-horizontal">
-      <li><a href="#">Welcome: {{user.username}}</a></li>
-      <li><a href="/post">Pitch!</a></li>
-      <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
-    </ul>
-  </div>
-</div>
-<div>
-  Current Funds: ${{ user.catchermodel.funds }}
-</div>
+{% extends "base.html" %}
+{% block title %}comment{% endblock %}
+{% block content %}
 <div>
   <div class="grid-x grid-padding-x">
     <div class="large-8 medium-8 small-12 large-offset-2 medium-offset-4 cell">
@@ -44,8 +17,4 @@
     </div>
   </div>
 </div>
-
-</html>
-
-<script scr="{% static 'js/vendor.js' %}"></script>
-<script scr="{% static 'js/foundation.js' %}"></script>
+{% endblock %}
