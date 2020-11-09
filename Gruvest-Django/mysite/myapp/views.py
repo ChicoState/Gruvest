@@ -28,8 +28,15 @@ class PitchCreator(LoginRequiredMixin, CreateView):
         'cost'
     ]
     form = forms.PostPitchForm
+    
+    
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = '/'
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        if form_instance.is_valid():
+            form_instance.save(request)
+        return HttpResponseRedirect(reverse("main"))
 
     # error checking form
     def form_valid(self, form):
@@ -53,6 +60,12 @@ class CommentCreator(LoginRequiredMixin, CreateView):
     form = forms.PostCommentForm
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = "/"
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        if form_instance.is_valid():
+            form_instance.post_id = self.kwargs['pk']
+            form_instance.save(request, pk=form_instance.post_id)
+        return HttpResponseRedirect(reverse("main"))
     # error checking form
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']

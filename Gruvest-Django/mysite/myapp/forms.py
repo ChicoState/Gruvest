@@ -25,9 +25,10 @@ class postForm(forms.Form):
         max_length = 1000,
     )
 
-    def save(self):
+    def save(self, request):
         post_instance = models.PostModel()
         post_instance.post = self.cleaned_data["post"]
+        post_instance.author = request.user
         post_instance.header = self.cleaned_data["header"]
         post_instance.save()
         return post_instance
@@ -45,6 +46,13 @@ class PostPitchForm(forms.ModelForm):
             "post",
             "cost",
         ]
+    def save(self, request):
+        post_instance = models.PostModel()
+        post_instance.post = self.cleaned_data["post"]
+        post_instance.author = request.user
+        post_instance.header = self.cleaned_data["header"]
+        post_instance.save()
+        return post_instance
 
 # Class used by CommentCreator
 class PostCommentForm(forms.ModelForm):
@@ -57,6 +65,14 @@ class PostCommentForm(forms.ModelForm):
         fields = [
            "comment",
         ]
+    def save(self, request, pk):
+        post_instance = models.PostModel.objects.get(id=pk)
+        comment_instance = models.CommentModel()
+        comment_instance.post = post_instance
+        comment_instance.comment = self.cleaned_data["comment"]
+        comment_instance.author = request.user
+        comment_instance.save()
+        return comment_instance
 
 class AddFundsForm(forms.ModelForm):
 

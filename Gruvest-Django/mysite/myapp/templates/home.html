@@ -26,6 +26,8 @@
         </div>
         <div class="abstracted-pitch-info">
             <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
+            <p>Pitcher: {{pItor.author}}</p>
+            <p>Made On: {{pItor.published_on}}</p>
             <p id="abstracted-pitch-info-cost">Cost: {{pItor.cost}}</p>
         </div>
         <br>

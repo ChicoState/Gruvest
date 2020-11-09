@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.http import HttpResponseRedirect
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # Create your models here.
 class PostModel(models.Model):
@@ -10,6 +12,8 @@ class PostModel(models.Model):
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
     cost = models.PositiveIntegerField(default=1)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    published_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return (self.header + "\n" + self.post)
@@ -29,7 +33,9 @@ class PostModel(models.Model):
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)
     post = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='comments')
-    
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    published_on = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
         return self.comment
 
@@ -60,3 +66,10 @@ class CatcherModel(models.Model):
 
     def __str__(self):
         return str(self.user)
+
+#function comes from this tutorial: https://rb.gy/8mu15h
+@receiver(post_save, sender=User)
+def update_profile_signal(sender, instance, created, **kwargs):
+    if created:
+        CatcherModel.objects.create(user=instance)
+    instance.catchermodel.save()
