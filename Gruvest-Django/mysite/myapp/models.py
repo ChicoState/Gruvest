@@ -73,3 +73,10 @@ def update_profile_signal(sender, instance, created, **kwargs):
     if created:
         CatcherModel.objects.create(user=instance)
     instance.catchermodel.save()
+
+class SubscribeModel(models.Model):
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subcribe_user')
+    pitcher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='pitcher_user')
+
+    def __str__(self):
+        return str(self.pitcher)

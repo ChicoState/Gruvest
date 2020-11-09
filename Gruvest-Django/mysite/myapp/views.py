@@ -151,9 +151,13 @@ def index(request):
     title = "Gruvest"
     posts = models.PostModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
+    subscriptions = models.SubscribeModel.objects.all()
+    currentSubs = subscriptions.filter(subscriber = request.user)
     context = {
         "post":sortedPosts,
         "title":title,
+        "subscription":currentSubs,
+
     }
     return render(request, "home.html", context = context)
 
@@ -242,3 +246,19 @@ def register(request):
         "form":form_instance,
     }
     return render(request, "registration/register.html", context=context)
+
+@login_required(redirect_field_name='main')
+def subscribeView(request, pk):
+    is_subscribed = False
+    subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    try:
+        models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
+        is_subscribed = True
+    except models.SubscribeModel.DoesNotExist:
+        pass
+    if(is_subscribed == False):
+        models.SubscribeModel.objects.create(subscriber=request.user, pitcher=subcription.author)
+    else:
+        sub = models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
+        sub.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

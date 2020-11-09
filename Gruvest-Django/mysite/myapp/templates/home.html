@@ -3,6 +3,11 @@
 <div>
     {% if user.is_authenticated %}
     Current Funds: ${{ user.catchermodel.funds }}
+    Subscriptions:
+    {% for itor in subscription %}
+        {{ itor.pitcher }}
+    {% endfor %}
+
     {% else %}
     Current Funds: $0
     {% endif %}
@@ -26,9 +31,15 @@
         </div>
         <div class="abstracted-pitch-info">
             <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
-            <p>Pitcher: {{pItor.author}}</p>
-            <p>Made On: {{pItor.published_on}}</p>
+            <p id="abstracted-pitch-info-cost">Pitcher: {{pItor.author}}</p>
+            <p id="abstracted-pitch-info-cost">Made On: {{pItor.published_on}}</p>
             <p id="abstracted-pitch-info-cost">Cost: {{pItor.cost}}</p>
+            <form action="{% url 'sub' pItor.id %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" name="post_id" value="{{ pItor.id }}" id="subscribe-button">
+                    Subscribe
+                </button>
+            </form>
         </div>
         <br>
     </div>
