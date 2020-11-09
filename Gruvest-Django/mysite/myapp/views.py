@@ -151,8 +151,11 @@ def index(request):
     title = "Gruvest"
     posts = models.PostModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
-    subscriptions = models.SubscribeModel.objects.all()
-    currentSubs = subscriptions.filter(subscriber = request.user)
+    if(request.user.is_authenticated):
+        subscriptions = models.SubscribeModel.objects.all()
+        currentSubs = subscriptions.filter(subscriber = request.user)
+    else:
+        currentSubs = "Login"
     context = {
         "post":sortedPosts,
         "title":title,
@@ -160,6 +163,7 @@ def index(request):
 
     }
     return render(request, "home.html", context = context)
+
 
 # Creates view for upvoting
 # This function is inspired by this stack overflow post: rb.gy/pb8u2y
