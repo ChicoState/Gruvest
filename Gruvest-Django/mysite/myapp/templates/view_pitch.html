@@ -50,6 +50,8 @@
                 {% if object.comments.all %}
                 {% for cItor in object.comments.all %}
                 <p id="comment">{{cItor.comment}}</p>
+                <p>Pitcher: {{cItor.author}}</p>
+                <p>Made On: {{cItor.published_on}}</p>
                 {% endfor %}
                 {% endif %}
             </div>

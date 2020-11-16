@@ -28,8 +28,15 @@ class PitchCreator(LoginRequiredMixin, CreateView):
         'cost'
     ]
     form = forms.PostPitchForm
+    
+    
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = '/'
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        if form_instance.is_valid():
+            form_instance.save(request)
+        return HttpResponseRedirect(reverse("main"))
 
     # error checking form
     def form_valid(self, form):
@@ -53,6 +60,12 @@ class CommentCreator(LoginRequiredMixin, CreateView):
     form = forms.PostCommentForm
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = "/"
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        if form_instance.is_valid():
+            form_instance.post_id = self.kwargs['pk']
+            form_instance.save(request, pk=form_instance.post_id)
+        return HttpResponseRedirect(reverse("main"))
     # error checking form
     def form_valid(self, form):
         form.instance.post_id = self.kwargs['pk']
@@ -138,11 +151,19 @@ def index(request):
     title = "Gruvest"
     posts = models.PostModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
+    if(request.user.is_authenticated):
+        subscriptions = models.SubscribeModel.objects.all()
+        currentSubs = subscriptions.filter(subscriber = request.user)
+    else:
+        currentSubs = "Login"
     context = {
         "post":sortedPosts,
         "title":title,
+        "subscription":currentSubs,
+
     }
     return render(request, "home.html", context = context)
+
 
 # Creates view for upvoting
 # This function is inspired by this stack overflow post: rb.gy/pb8u2y
@@ -229,3 +250,19 @@ def register(request):
         "form":form_instance,
     }
     return render(request, "registration/register.html", context=context)
+
+@login_required(redirect_field_name='main')
+def subscribeView(request, pk):
+    is_subscribed = False
+    subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    try:
+        models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
+        is_subscribed = True
+    except models.SubscribeModel.DoesNotExist:
+        pass
+    if(is_subscribed == False):
+        models.SubscribeModel.objects.create(subscriber=request.user, pitcher=subcription.author)
+    else:
+        sub = models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
+        sub.delete()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
