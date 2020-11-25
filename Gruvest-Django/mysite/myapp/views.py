@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from chartjs.views.lines import BaseLineChartView
+#from chartjs.views.lines import BaseLineChartView
 from . import forms
 from . import models
 
@@ -21,7 +21,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     # the associated html template
     template_name = "post_pitch.html"
     # specified model which this object creates
-    model = models.PostModel
+    model = models.UserModel
     # specified fields to be entered by user
     fields = [
         'header',
@@ -31,7 +31,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     form = forms.PostPitchForm
     
     
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = '/'
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
@@ -59,7 +59,7 @@ class CommentCreator(LoginRequiredMixin, CreateView):
         "comment"
     ]
     form = forms.PostCommentForm
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = "/"
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
@@ -85,7 +85,7 @@ class AddFunds(UpdateView):
         'funds'
     ]
     form = forms.AddFundsForm
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = '/'
 
     def post(self, request, *args, **kwargs):
@@ -105,18 +105,19 @@ class AddFunds(UpdateView):
 '''
 PitchDetail inherits from DetailView
     is a Retrieve operation
+PitchDetail is now UserDetail
 '''
 
-class PitchDetail(LoginRequiredMixin, DetailView):
+class UserDetail(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     redirect_field_name = 'main'
     template_name = "view_pitch.html"
-    model = models.PostModel
+    model = models.UserModel
 
     def get(self, request, *args, **kwargs):
         currentFunds = request.user.catchermodel.funds
         purchased = False
-        post = get_object_or_404(models.PostModel, id=self.kwargs['pk'])
+        post = get_object_or_404(models.UserModel, id=self.kwargs['pk'])
         try:
             models.PurchaseModel.objects.get(purchasedPost = post, purchaser=request.user)
             purchased = True
@@ -145,12 +146,12 @@ ListPitches inherits from ListView
 '''
 class PitchList(ListView):
     template_name = "pitches.html"
-    model = models.PostModel
+    model = models.UserModel
 
 # Create your views here.
 def index(request):
     title = "Gruvest"
-    posts = models.PostModel.objects.all()
+    posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
@@ -172,7 +173,7 @@ def index(request):
 def upVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -206,7 +207,7 @@ def upVoteView(request, pk):
 def downVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -255,7 +256,7 @@ def register(request):
 @login_required(redirect_field_name='main')
 def subscribeView(request, pk):
     is_subscribed = False
-    subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    subcription = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
         is_subscribed = True
@@ -267,25 +268,3 @@ def subscribeView(request, pk):
         sub = models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
         sub.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-'''View Chart'''
-
-class LineChartJSONView(BaseLineChartView):
-    def get_labels(self):
-        """Return 7 labels for the x-axis."""
-        return ["January", "February", "March", "April", "May", "June", "July"]
-
-    def get_providers(self):
-        """Return names of datasets."""
-        return ["Central", "Eastside", "Westside"]
-
-    def get_data(self):
-        """Return 3 datasets to plot."""
-
-        return [[75, 44, 92, 11, 44, 95, 35],
-                [41, 92, 18, 3, 73, 87, 92],
-                [87, 21, 94, 3, 90, 13, 65]]
-
-
-lineChart = TemplateView.as_view(template_name='chartjs.html')
-lineChartJSON = LineChartJSONView.as_view()

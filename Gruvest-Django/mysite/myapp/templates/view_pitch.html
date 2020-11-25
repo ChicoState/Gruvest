@@ -45,13 +45,6 @@
                     <p id="pitch-post">{{object.post}}</p>
                 </div>
             </div>
-
-            <div class="pitch-charts">
-                <div id="chart">
-
-                </div>
-            </div>
-
             <a href="{% url 'postComment' object.pk %}">Comment</a>
             <div class="pitch-comments">
                 {% if object.comments.all %}

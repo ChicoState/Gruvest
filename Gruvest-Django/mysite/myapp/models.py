@@ -6,7 +6,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
-class PostModel(models.Model):
+
+'''Post Model is now the User Page'''
+class UserModel(models.Model):
     header = models.CharField(max_length=100)
     post = models.CharField(max_length=5000)
     upVotes = models.IntegerField(default=0)
@@ -32,7 +34,7 @@ class PostModel(models.Model):
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)
-    post = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey('UserModel', on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     published_on = models.DateTimeField(auto_now_add=True)
 
@@ -44,15 +46,15 @@ class CommentModel(models.Model):
 
 class UpvoteModel(models.Model):
     upvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='upvote_user')
-    upvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='upvoted_post')
+    upvotedPost = models.ForeignKey('UserModel', on_delete=models.CASCADE, related_name='upvoted_post')
 
 class DownvoteModel(models.Model):
     downvoter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='downvote_user')
-    downvotedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='downvoted_post')
+    downvotedPost = models.ForeignKey('UserModel', on_delete=models.CASCADE, related_name='downvoted_post')
 
 class PurchaseModel(models.Model):
     purchaser = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchase_user')
-    purchasedPost = models.ForeignKey('PostModel', on_delete=models.CASCADE, related_name='purchased_post')
+    purchasedPost = models.ForeignKey('UserModel', on_delete=models.CASCADE, related_name='purchased_post')
 
     def checkUser(self):
         if(User == self.purchaser):

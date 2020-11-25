@@ -33,9 +33,9 @@
                 {% endif %}
                 {% if user.is_authenticated %}
                 <li><a href="#">Welcome: {{user.username}}</a></li>
-            {% else %}
+                {% else %}
                 <li><a>Welcome: Guest</a></li>
-            {% endif %}
+                {% endif %}
                 <li><a href="/post">Pitch!</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
