@@ -17,5 +17,5 @@ urlpatterns = [
     path('logout/', views.logout_view),
     path('subscribe/<int:pk>', views.subscribeView, name='sub'),
     path('chartjs/', chartViews.HomeView.as_view(), name='chart'),
-    path('chartjs/api', chartViews.ChartData.as_view(), name='chartData'),
+    path('api', chartViews.ChartData.as_view(), name='chartData'),
 ]
