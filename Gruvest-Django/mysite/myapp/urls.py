@@ -15,5 +15,6 @@ urlpatterns = [
     path('register/', views.register),
     path('logout/', views.logout_view),
     path('subscribe/<int:pk>', views.subscribeView, name='sub'),
-
+    path('chart', views.lineChart, name='lineChart'),
+    path('chartJSON', views.lineChartJSON, name='lineChartJSON'),
 ]

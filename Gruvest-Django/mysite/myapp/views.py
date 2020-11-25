@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.views.generic import View, CreateView, DetailView, ListView, UpdateView, DeleteView, FormView
+from django.views.generic import View, CreateView, DetailView, ListView, UpdateView, DeleteView, FormView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from chartjs.views.lines import BaseLineChartView
 from . import forms
 from . import models
 
@@ -266,3 +267,25 @@ def subscribeView(request, pk):
         sub = models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
         sub.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+'''View Chart'''
+
+class LineChartJSONView(BaseLineChartView):
+    def get_labels(self):
+        """Return 7 labels for the x-axis."""
+        return ["January", "February", "March", "April", "May", "June", "July"]
+
+    def get_providers(self):
+        """Return names of datasets."""
+        return ["Central", "Eastside", "Westside"]
+
+    def get_data(self):
+        """Return 3 datasets to plot."""
+
+        return [[75, 44, 92, 11, 44, 95, 35],
+                [41, 92, 18, 3, 73, 87, 92],
+                [87, 21, 94, 3, 90, 13, 65]]
+
+
+lineChart = TemplateView.as_view(template_name='chartjs.html')
+lineChartJSON = LineChartJSONView.as_view()
