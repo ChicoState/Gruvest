@@ -11,11 +11,24 @@ from django.dispatch import receiver
 class UserModel(models.Model):
     header = models.CharField(max_length=100)
     post = models.CharField(max_length=5000)
+
+    # ForeignKey is M:1
+    # Does this mean we design StocksModel to contain one value per field?
+    #stocks = models.ForeignKey(StocksModel, on_delete=models.CASCADE) # what does CASCADE mean?
+
+    # how to go about function that calculates portfolio?
+
+    # pitcher rankings
+    comparisonSP500 = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    comparisonGruvest = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    userFeedback = models.DecimalField(max_digits=1, decimal_places=1, default=0.0)
+
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
     cost = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     published_on = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return (self.header + "\n" + self.post)
@@ -31,6 +44,36 @@ class UserModel(models.Model):
     
     def get_absolute_url(self):
         return HttpResponseRedirect(reverse("main"))
+
+# Contains list of all tracked stocks for pitcher
+class TrackedStocksModel(models.Model):
+    pitcher = models.ForeignKey(User, on_delete=models.CASCADE)
+    #symbol = models.CharField(max_length=10)
+    #name = models.CharField(max_length=100)
+
+    # ENABLE JSON IN SQLITE
+    data = models.JSONField(null=True)
+
+    # changes each time category is changed
+    date = models.DateTimeField(auto_now_add=True)
+
+    # tracks accuracy of stock % inc/dec
+    accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+
+    '''
+    BUY = 0
+    HOLD = 1
+    SELL = 2
+    '''
+    options = [
+        (0, 'BUY'),
+        (1, 'HOLD'),
+        (2, 'SELL'),
+    ]
+    category = models.CharField(max_length=4, choices=options, default=1)
+
+    def getOptions(self):
+        return self.options
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)

@@ -6,7 +6,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-#from chartjs.views.lines import BaseLineChartView
 from . import forms
 from . import models
 
@@ -113,6 +112,11 @@ class UserDetail(LoginRequiredMixin, DetailView):
     redirect_field_name = 'main'
     template_name = "view_pitch.html"
     model = models.UserModel
+
+    # display tracked stocks
+    # how do I get the stocks with foreign key of the pitcher the user is viewing?
+
+    # display pitcher rankings
 
     def get(self, request, *args, **kwargs):
         currentFunds = request.user.catchermodel.funds
