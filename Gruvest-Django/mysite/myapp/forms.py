@@ -104,3 +104,13 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+'''
+class UpdateStocksForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.TrackedStocksModel
+        fields = [
+            "percentage"
+        ]
+'''

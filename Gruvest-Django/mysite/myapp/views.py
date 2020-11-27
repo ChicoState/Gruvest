@@ -117,6 +117,11 @@ class UserDetail(LoginRequiredMixin, DetailView):
     # how do I get the stocks with foreign key of the pitcher the user is viewing?
 
     # display pitcher rankings
+    # function to get stocks in JSON, insert into TrackedStocksModel
+    #   calculate portfolio performance
+    #   calculate comparison to S&P500
+    #   calculate comparison to Gruvest
+    #   calculate user feedback
 
     def get(self, request, *args, **kwargs):
         currentFunds = request.user.catchermodel.funds
@@ -142,6 +147,24 @@ class UserDetail(LoginRequiredMixin, DetailView):
             return render(request, "view_pitch.html", context = context)
         else:
             return HttpResponseRedirect(reverse("main"))
+
+'''
+class TrackedStockUpdateView(UpdateView):
+    #pitcher = models.UserModel
+    model = models.TrackedStocksModel
+    #queryset = model.objects.all(id=pk) # get all stocks tracked by the pitcher
+    fields = [
+        'percentages'
+    ]
+    form = forms.UpdateStocksForm
+    template_name = 'view_pitch.html'
+
+    def post(self, request, *args, **kwargs):
+        queryset = model.objects.all(id=self.kwargs['pk']) # get all tracked stocks by the pitcher
+        for stock in queryset:
+            # update price
+'''
+
 
 '''
 ListPitches inherits from ListView
