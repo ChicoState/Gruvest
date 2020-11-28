@@ -50,7 +50,7 @@ class UserModel(models.Model):
 class StocksModel(models.Model):
     #name = models.CharField(max_length=100) NOT NEEDED BECAUSE ALPHA VANTAGE DOESN'T STORE NAMES
     ticker = models.CharField(max_length=10)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=False)
     closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
     percentageChange = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
@@ -65,7 +65,7 @@ class TrackedStocksModel(models.Model):
     #data = models.JSONField(null=True)
 
     # changes each time category is changed
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
     # tracks accuracy of stock % inc/dec
     #accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)

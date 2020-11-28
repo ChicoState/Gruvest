@@ -14,4 +14,5 @@ toml==0.10.1
 wrapt==1.12.1
 django-chartjs==2.2.1
 djangorestframework==3.12.2
+pandas==1.1.4
 alpha_vantage==2.2.0
