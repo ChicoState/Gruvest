@@ -106,7 +106,6 @@ PitchDetail inherits from DetailView
     is a Retrieve operation
 PitchDetail is now UserDetail
 '''
-
 class UserDetail(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     redirect_field_name = 'main'

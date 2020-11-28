@@ -48,7 +48,7 @@ class UserModel(models.Model):
 
 # Contains stocks
 class StocksModel(models.Model):
-    name = models.CharField(max_length=100)
+    #name = models.CharField(max_length=100) NOT NEEDED BECAUSE ALPHA VANTAGE DOESN'T STORE NAMES
     ticker = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now_add=True)
     closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
