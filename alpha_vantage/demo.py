@@ -5,10 +5,15 @@ import time
 apiKey = 'VLG4S2J38MECAW2U'
 
 ts = TimeSeries(key="apiKey", output_format='pandas')
-data, meta_data = ts.get_daily(symbol='AAPL', outputsize='full')
+data, meta_data = ts.get_daily(symbol='AAPL', outputsize='compact')
+print(data)
 
-closeData = data['4. close']
-print(closeData)
-percentChange = closeData.pct_change()
+'''get S&P500'''
+#spData = ts.get_daily(symbol='SPX', outputsize='compact')
+#print(spData)
 
-print(percentChange)
+#closeData = data['4. close']
+#print(closeData)
+#percentChange = closeData.pct_change()
+
+#print(percentChange)

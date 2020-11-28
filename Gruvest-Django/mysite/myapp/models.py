@@ -57,8 +57,8 @@ class StocksModel(models.Model):
 
 # Contains list of all tracked stocks for pitcher
 class TrackedStocksModel(models.Model):
-    pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # 1:1 with pitcher
-    data = models.ManyToManyField(StocksModel)
+    pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # M:1 with pitcher
+    data = models.ManyToManyField(StocksModel) # M:M with stock
     description = models.CharField(max_length=100, default="")
 
     # ENABLE JSON IN SQLITE
