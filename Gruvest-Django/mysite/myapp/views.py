@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
-from django.views.generic import View, CreateView, DetailView, ListView, UpdateView, DeleteView, FormView
+from django.views.generic import View, CreateView, DetailView, ListView, UpdateView, DeleteView, FormView, TemplateView
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -20,7 +20,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     # the associated html template
     template_name = "post_pitch.html"
     # specified model which this object creates
-    model = models.PostModel
+    model = models.UserModel
     # specified fields to be entered by user
     fields = [
         'header',
@@ -30,7 +30,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     form = forms.PostPitchForm
     
     
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = '/'
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
@@ -58,7 +58,7 @@ class CommentCreator(LoginRequiredMixin, CreateView):
         "comment"
     ]
     form = forms.PostCommentForm
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = "/"
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
@@ -84,7 +84,7 @@ class AddFunds(UpdateView):
         'funds'
     ]
     form = forms.AddFundsForm
-    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
     success_url = '/'
 
     def post(self, request, *args, **kwargs):
@@ -104,18 +104,29 @@ class AddFunds(UpdateView):
 '''
 PitchDetail inherits from DetailView
     is a Retrieve operation
+PitchDetail is now UserDetail
 '''
 
-class PitchDetail(LoginRequiredMixin, DetailView):
+class UserDetail(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     redirect_field_name = 'main'
     template_name = "view_pitch.html"
-    model = models.PostModel
+    model = models.UserModel
+
+    # display tracked stocks
+    # how do I get the stocks with foreign key of the pitcher the user is viewing?
+
+    # display pitcher rankings
+    # function to get stocks in JSON, insert into TrackedStocksModel
+    #   calculate portfolio performance
+    #   calculate comparison to S&P500
+    #   calculate comparison to Gruvest
+    #   calculate user feedback
 
     def get(self, request, *args, **kwargs):
         currentFunds = request.user.catchermodel.funds
         purchased = False
-        post = get_object_or_404(models.PostModel, id=self.kwargs['pk'])
+        post = get_object_or_404(models.UserModel, id=self.kwargs['pk'])
         try:
             models.PurchaseModel.objects.get(purchasedPost = post, purchaser=request.user)
             purchased = True
@@ -138,18 +149,36 @@ class PitchDetail(LoginRequiredMixin, DetailView):
             return HttpResponseRedirect(reverse("main"))
 
 '''
+class TrackedStockUpdateView(UpdateView):
+    #pitcher = models.UserModel
+    model = models.TrackedStocksModel
+    #queryset = model.objects.all(id=pk) # get all stocks tracked by the pitcher
+    fields = [
+        'percentages'
+    ]
+    form = forms.UpdateStocksForm
+    template_name = 'view_pitch.html'
+
+    def post(self, request, *args, **kwargs):
+        queryset = model.objects.all(id=self.kwargs['pk']) # get all tracked stocks by the pitcher
+        for stock in queryset:
+            # update price
+'''
+
+
+'''
 ListPitches inherits from ListView
     eventually this can replace parts of def index()
     see http://localhost/list/ for demo
 '''
 class PitchList(ListView):
     template_name = "pitches.html"
-    model = models.PostModel
+    model = models.UserModel
 
 # Create your views here.
 def index(request):
     title = "Gruvest"
-    posts = models.PostModel.objects.all()
+    posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
@@ -171,7 +200,7 @@ def index(request):
 def upVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -205,7 +234,7 @@ def upVoteView(request, pk):
 def downVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -254,7 +283,7 @@ def register(request):
 @login_required(redirect_field_name='main')
 def subscribeView(request, pk):
     is_subscribed = False
-    subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    subcription = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     try:
         models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
         is_subscribed = True
