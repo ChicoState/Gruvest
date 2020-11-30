@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/ChicoState/Gruvest.svg?branch=charts)](https://travis-ci.com/ChicoState/Gruvest)
 # Contributions
 
 ## Cloning the repo
