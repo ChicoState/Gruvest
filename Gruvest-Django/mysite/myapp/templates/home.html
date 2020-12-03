@@ -12,7 +12,10 @@
     Current Funds: $0
     {% endif %}
 </div>
-
+<a href="/" class="button">Popularity</a>
+<a href="{% url 'sortedCost' %}" class="button">Cost</a>
+<a href="{% url 'sortedDate' %}" class="button">Date</a>
+<p> sorted by: {{sort}} </p>
 <ul class="pitch-list-column">
     {% for pItor in post %}
     <p class="net-votes">{{pItor.getTotalVotes}}</p>

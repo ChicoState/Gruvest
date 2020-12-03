@@ -26,6 +26,12 @@ class PostModel(models.Model):
 
     def getTotalVotes(self):
         return self.upVotes - self.downVotes
+     
+    def getCost(self):
+        return self.cost  
+
+    def getDate(self):
+        return self.published_on
     
     def get_absolute_url(self):
         return HttpResponseRedirect(reverse("main"))

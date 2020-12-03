@@ -28,14 +28,20 @@ class PitchCreator(LoginRequiredMixin, CreateView):
         'cost'
     ]
     form = forms.PostPitchForm
-    
-    
     # upon creation, stay on current page (which is main since PostModel redirects to main)
     success_url = '/'
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
-        if form_instance.is_valid():
-            form_instance.save(request)
+        try:
+            obj = models.PostModel.objects.get(author=request.user)
+            if form_instance.is_valid():
+                obj.post = form_instance.cleaned_data["post"]
+                obj.header = form_instance.cleaned_data["header"]
+                obj.cost = form_instance.cleaned_data["cost"]
+                obj.save()
+        except models.PostModel.DoesNotExist:
+            if form_instance.is_valid():
+                form_instance.save(request)
         return HttpResponseRedirect(reverse("main"))
 
     # error checking form
@@ -113,29 +119,24 @@ class PitchDetail(LoginRequiredMixin, DetailView):
     model = models.PostModel
 
     def get(self, request, *args, **kwargs):
-        currentFunds = request.user.catchermodel.funds
-        purchased = False
         post = get_object_or_404(models.PostModel, id=self.kwargs['pk'])
+        is_subscribed = False
         try:
-            models.PurchaseModel.objects.get(purchasedPost = post, purchaser=request.user)
-            purchased = True
-        except models.PurchaseModel.DoesNotExist:
+            models.SubscribeModel.objects.get(subscriber=request.user, pitcher=post.author)
+            is_subscribed = True
+        except models.SubscribeModel.DoesNotExist:
             pass
-        if(currentFunds >= post.cost and purchased == False):
-            models.PurchaseModel.objects.create(purchasedPost = post, purchaser=request.user)
-            request.user.catchermodel.funds -= post.cost
-            request.user.catchermodel.save()
-            context = {
-                'object': post
-            }
-            return render(request, "view_pitch.html", context = context)
-        elif(purchased == True):
+        if(is_subscribed or post.author == request.user):
             context = {
                 'object': post
             }
             return render(request, "view_pitch.html", context = context)
         else:
-            return HttpResponseRedirect(reverse("main"))
+            context = {
+                'object': post
+            }
+            return render(request, "view_pitch_NS.html", context = context)
+            
 
 '''
 ListPitches inherits from ListView
@@ -157,6 +158,7 @@ def index(request):
     else:
         currentSubs = "Login"
     context = {
+        "sort":"Popularity",
         "post":sortedPosts,
         "title":title,
         "subscription":currentSubs,
@@ -164,6 +166,39 @@ def index(request):
     }
     return render(request, "home.html", context = context)
 
+def sortedCost(request):
+    title = "Gruvest"
+    posts = models.PostModel.objects.all()
+    sortedPosts = sorted(posts, key=lambda self: self.getCost(), reverse=True)
+    if(request.user.is_authenticated):
+        subscriptions = models.SubscribeModel.objects.all()
+        currentSubs = subscriptions.filter(subscriber = request.user)
+    else:
+        currentSubs = "Login"
+    context = {
+        "sort": "Cost",
+        "post":sortedPosts,
+        "title":title,
+        "subscription":currentSubs,
+    }
+    return render(request, 'home.html', context=context)
+
+def sortedDate(request):
+    title = "Gruvest"
+    posts = models.PostModel.objects.all()
+    sortedPosts = sorted(posts, key=lambda self: self.getDate(), reverse=True)
+    if(request.user.is_authenticated):
+        subscriptions = models.SubscribeModel.objects.all()
+        currentSubs = subscriptions.filter(subscriber = request.user)
+    else:
+        currentSubs = "Login"
+    context = {
+        "sort": "Date",
+        "post":sortedPosts,
+        "title":title,
+        "subscription":currentSubs,
+    }
+    return render(request, 'home.html', context=context)
 
 # Creates view for upvoting
 # This function is inspired by this stack overflow post: rb.gy/pb8u2y
@@ -254,15 +289,20 @@ def register(request):
 @login_required(redirect_field_name='main')
 def subscribeView(request, pk):
     is_subscribed = False
+    currentFunds = request.user.catchermodel.funds
     subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    if(request.user == subcription.author):
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     try:
         models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
         is_subscribed = True
     except models.SubscribeModel.DoesNotExist:
         pass
-    if(is_subscribed == False):
+    if(is_subscribed == False and currentFunds >= subcription.cost):
         models.SubscribeModel.objects.create(subscriber=request.user, pitcher=subcription.author)
-    else:
-        sub = models.SubscribeModel.objects.get(subscriber=request.user, pitcher=subcription.author)
-        sub.delete()
+        request.user.catchermodel.funds -= subcription.cost
+        request.user.catchermodel.save()
+        subcription.author.catchermodel.funds += subcription.cost
+        subcription.author.catchermodel.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
