@@ -33,13 +33,13 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     def post(self, request, *args, **kwargs):
         form_instance = self.form(request.POST)
         try:
-            obj = models.PostModel.objects.get(author=request.user)
+            obj = models.UserModel.objects.get(author=request.user)
             if form_instance.is_valid():
                 obj.post = form_instance.cleaned_data["post"]
                 obj.header = form_instance.cleaned_data["header"]
                 obj.cost = form_instance.cleaned_data["cost"]
                 obj.save()
-        except models.PostModel.DoesNotExist:
+        except models.UserModel.DoesNotExist:
             if form_instance.is_valid():
                 form_instance.save(request)
         return HttpResponseRedirect(reverse("main"))
@@ -130,7 +130,7 @@ class UserDetail(LoginRequiredMixin, DetailView):
     #   calculate user feedback
 
     def get(self, request, *args, **kwargs):
-        post = get_object_or_404(models.PostModel, id=self.kwargs['pk'])
+        post = get_object_or_404(models.UserModel, id=self.kwargs['pk'])
         is_subscribed = False
 
         try:
@@ -198,7 +198,7 @@ def index(request):
 
 def sortedCost(request):
     title = "Gruvest"
-    posts = models.PostModel.objects.all()
+    posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getCost(), reverse=True)
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
@@ -215,7 +215,7 @@ def sortedCost(request):
 
 def sortedDate(request):
     title = "Gruvest"
-    posts = models.PostModel.objects.all()
+    posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getDate(), reverse=True)
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
@@ -320,7 +320,7 @@ def register(request):
 def subscribeView(request, pk):
     is_subscribed = False
     currentFunds = request.user.catchermodel.funds
-    subcription = get_object_or_404(models.PostModel, id=request.POST.get('post_id'))
+    subcription = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
     if(request.user == subcription.author):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     try:
