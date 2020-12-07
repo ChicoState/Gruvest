@@ -17,7 +17,7 @@ class PostPitchForm(forms.ModelForm):
     # meta class
     class Meta:
         # model to be used
-        model = models.PostModel
+        model = models.UserModel
         # fields to be used
         fields = [
             "header",
@@ -25,7 +25,7 @@ class PostPitchForm(forms.ModelForm):
             "cost",
         ]
     def save(self, request):
-        post_instance = models.PostModel()
+        post_instance = models.UserModel()
         post_instance.post = self.cleaned_data["post"]
         post_instance.author = request.user
         post_instance.header = self.cleaned_data["header"]
@@ -45,7 +45,7 @@ class PostCommentForm(forms.ModelForm):
            "comment",
         ]
     def save(self, request, pk):
-        post_instance = models.PostModel.objects.get(id=pk)
+        post_instance = models.UserModel.objects.get(id=pk)
         comment_instance = models.CommentModel()
         comment_instance.post = post_instance
         comment_instance.comment = self.cleaned_data["comment"]
@@ -83,3 +83,13 @@ class RegistrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+'''
+class UpdateStocksForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.TrackedStocksModel
+        fields = [
+            "percentage"
+        ]
+'''

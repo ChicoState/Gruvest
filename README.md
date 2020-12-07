@@ -37,3 +37,10 @@ Downloads changes in main branch and merges them with your branch.
 
 If the changes in main should serve as the base in your feature branch, use the `--rebase` option
 
+### Working with others on their feature branch
+
+```
+$ git fetch https://github.com/ChicoState/Gruvest.git TheirBranchName:YourCopyName
+$ git checkout YourCopyName
+```
+Fetches their branch on the git server and makes a local clone of it
