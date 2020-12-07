@@ -1,5 +1,7 @@
 # Contributions
 
+[![Build Status](https://travis-ci.org/blueweaver/Gruvest.svg?branch=main)](https://travis-ci.org/blueweaver/Gruvest)
+
 ## Cloning the repo
 
 ```
