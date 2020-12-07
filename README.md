@@ -1,5 +1,8 @@
 # Contributions
 
+[![Build Status](https://travis-ci.org/blueweaver/Gruvest.svg?branch=Django)](https://travis-ci.org/blueweaver/Gruvest)
+[![Coverage Status](https://coveralls.io/repos/github/blueweaver/Gruvest/badge.svg?branch=Django)](https://coveralls.io/github/blueweaver/Gruvest?branch=Django)
+
 ## Cloning the repo
 
 ```

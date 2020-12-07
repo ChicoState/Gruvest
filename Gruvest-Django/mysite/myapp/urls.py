@@ -16,6 +16,9 @@ urlpatterns = [
     path('register/', views.register),
     path('logout/', views.logout_view),
     path('subscribe/<int:pk>', views.subscribeView, name='sub'),
+    path('cost/', views.sortedCost, name="sortedCost"),
+    path('date/', views.sortedDate, name="sortedDate"),
     path('chartjs/', chartViews.HomeView.as_view(), name='chart'),
     path('api', chartViews.ChartData.as_view(), name='chartData'),
 ]
+

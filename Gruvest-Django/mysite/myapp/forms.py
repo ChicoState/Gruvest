@@ -11,28 +11,6 @@ def must_be_unique(value):
     return value
 
 
-class postForm(forms.Form):
-
-    header = forms.CharField(
-        label='Enter Title',
-        required = True,
-        max_length = 100,
-    )
-
-    post = forms.CharField(
-        label='Enter Pitch',
-        required = True,
-        max_length = 1000,
-    )
-
-    def save(self, request):
-        post_instance = models.UserModel()
-        post_instance.post = self.cleaned_data["post"]
-        post_instance.author = request.user
-        post_instance.header = self.cleaned_data["header"]
-        post_instance.save()
-        return post_instance
-
 # Class used by PitchCreator
 class PostPitchForm(forms.ModelForm):
 
@@ -51,6 +29,7 @@ class PostPitchForm(forms.ModelForm):
         post_instance.post = self.cleaned_data["post"]
         post_instance.author = request.user
         post_instance.header = self.cleaned_data["header"]
+        post_instance.cost = self.cleaned_data["cost"]
         post_instance.save()
         return post_instance
 
