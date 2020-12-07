@@ -1,6 +1,7 @@
 # Contributions
 
-[![Build Status](https://travis-ci.org/blueweaver/Gruvest.svg?branch=main)](https://travis-ci.org/blueweaver/Gruvest)
+[![Build Status](https://travis-ci.org/blueweaver/Gruvest.svg?branch=django)](https://travis-ci.org/blueweaver/Gruvest)
+[![Coverage Status](https://coveralls.io/repos/github/blueweaver/Gruvest/badge.svg?branch=django)](https://coveralls.io/github/blueweaver/Gruvest?branch=django)
 
 ## Cloning the repo
 
