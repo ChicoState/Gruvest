@@ -145,13 +145,23 @@ class UserDetail(LoginRequiredMixin, DetailView):
         except models.SubscribeModel.DoesNotExist:
             pass
 
-        data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+        #userstocks = models.StocksModel.objects.filter(pitcher=1)
+
+        #SUMdeltas = np.full(100, 0)
+        #for stock in userstocks:
+        #    pathway = "/myapp/CSV/" + stock.ticker.upper() + ".csv"
+        #    data = pd.read_csv(os.path.join(settings.BASE_DIR, pathway))
+        #    SUMpoints = data['4. close'].to_numpy()
+
+        #    SUMdeltasX = np.full(100, SUMpoints[-1])
+        #    SUMdeltasX = 100*SUMpoints/SUMdeltasX-100
+        #    SUMdeltas = SUMdeltas + SUMdeltasX
+        data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/AAPL.csv'))
 
         SUMpoints = data['4. close'].to_numpy()
 
         SUMdeltas = np.full(100, SUMpoints[-1])
         SUMdeltas = 100*SUMpoints/SUMdeltas-100
-
 
         SUMlabels = list(reversed([*range(len(SUMpoints))]))
         SUMdeltas = list(reversed(SUMdeltas.tolist()))
