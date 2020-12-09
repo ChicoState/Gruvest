@@ -1,6 +1,9 @@
 [![Build Status](https://travis-ci.com/ChicoState/Gruvest.svg?branch=charts)](https://travis-ci.com/ChicoState/Gruvest)
 # Contributions
 
+[![Build Status](https://travis-ci.com/ChicoState/Gruvest.svg?branch=main)](https://travis-ci.com/ChicoState/Gruvest)
+[![Coverage Status](https://coveralls.io/repos/github/blueweaver/Gruvest/badge.svg?branch=Django)](https://coveralls.io/github/blueweaver/Gruvest?branch=Django)
+
 ## Cloning the repo
 
 ```
@@ -38,3 +41,10 @@ Downloads changes in main branch and merges them with your branch.
 
 If the changes in main should serve as the base in your feature branch, use the `--rebase` option
 
+### Working with others on their feature branch
+
+```
+$ git fetch https://github.com/ChicoState/Gruvest.git TheirBranchName:YourCopyName
+$ git checkout YourCopyName
+```
+Fetches their branch on the git server and makes a local clone of it

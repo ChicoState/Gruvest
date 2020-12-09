@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+{% block title %}view pitch{% endblock %}
+
+    <head>
+        <link rel="stylesheet" href="{% static 'css/foundation.css' %}">
+        <link rel="stylesheet" href="{% static 'css/view_pitch.css' %}">
+        <link rel="stylesheet" href="{% static 'css/topbar.css' %}">
+        {% block css%}{% endblock %}
+    </head>
+
+
+<body>
+    <div>
+        {% if user.is_authenticated %}
+        Current Funds: ${{ user.catchermodel.funds }}
+        {% else %}
+        Current Funds: $0
+        {% endif %}
+    </div>
+
+    <div class="detail-page">
+        <p class="net-votes">{{object.getTotalVotes}}</p>
+        <div class="pitch-list">
+            <div class="voting-buttons">
+                <form action="{% url 'upVotePost' object.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ object.id }}" id="upvote-button"
+                        style='font-size:25px;'>&#8593</button>
+                </form>
+                <form action="{% url 'downVotePost' object.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" name="post_id" value="{{ object.id }}" id="downvote-button"
+                        style='font-size:25px;'>&#8595</button>
+                </form>
+            </div>
+            <div class="pitch-info">
+                <div>
+                    <p id="pitch-title">{{object.header}}</p>
+                    <p id="pitch-cost"> cost: {{object.cost}}</p>
+                </div>
+                <br>
+                <div>
+                    <p id="pitch-post">Please subscribe to view content</p>
+                </div>
+            </div>
+            <a href="{% url 'postComment' object.pk %}">Comment</a>
+            <div class="pitch-comments">
+                {% if object.comments.all %}
+                {% for cItor in object.comments.all %}
+                <p id="comment">{{cItor.comment}}</p>
+                <p>Pitcher: {{cItor.author}}</p>
+                <p>Made On: {{cItor.published_on}}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
