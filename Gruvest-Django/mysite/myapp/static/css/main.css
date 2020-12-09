@@ -1,0 +1,239 @@
+@charset "UTF-8";
+template {
+	/* Colors */
+	/* Display */ 
+	/* Position */
+	/* Alignment */
+}
+
+html {
+	/* Colors */
+	font-family: sans-serif;
+	/* Display */
+	overflow: hidden;
+	/* Position */
+	box-sizing: border-box;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+	height: inherit;
+	width: inherit;
+}
+
+body {
+	/* Colors */
+	background-color: white;
+	color: black;
+	/* Display */
+	display: grid;
+	grid-gap: 0;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 15fr;
+	height: 100vh;
+	width: 100vw;
+	/* Position */
+	margin: 0;
+}
+
+body * {
+	background-color: rgba(0, 255, 128, 0.125);
+	border-color: rgb(0, 128, 255);
+	border-style: solid;
+	border-width: thin;
+
+}
+
+body > #TopBar {
+	/* Color */
+	background-color: #e3cdff; /*purple-highlight*/
+	color: purple;
+	/* Display */
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: auto;
+	height: 100%;
+	width: 100%;
+	/* Alignment */
+	align-content: center;
+}
+
+#TopBar > #Logo {
+	/* Colors */
+	font-size: 2.5rem;
+	font-weight: bold;
+	/* Position */
+	margin-left: 1rem;
+}
+
+body > #ContentSplit {
+	/* Colors */
+	/* Display */
+	display: grid;
+	grid-template-columns: 7fr 5fr;
+	grid-template-rows: auto;
+	height: 100%;
+	width: 100%;
+	/* Position */
+	margin: 0;
+}
+
+#ContentSplit > #PitchList {
+	/* Colors */
+	/* Display */
+	overflow-x: scroll;
+	overflow-y: scroll;
+		/* Vendor-Specifics for invisible scroll bars */
+		-ms-overflow-style: none; /* IE & Edge */
+		scrollbar-width: none; /* FF */
+}
+
+#PitchList > .pitch {
+	/* Colors */
+	background-color: #bdf0f7; /*soft-aoi-highlight*/
+	border-color: #5dbcd2; /*aoi-edge*/
+	border-style: solid;
+	color: #3792fe; /*aoi-text*/
+	/* Display */
+	display: grid;
+	grid-template-columns: 2fr 18fr 3fr;
+	grid-template-rows: auto;
+	height: auto;
+	/* Position */
+	margin: 1rem 2rem 1rem 1rem;
+}
+
+#PitchList > .pitch:hover {
+	background-color: #e3cdff; /*purple-highlight*/
+	border-color: #cba2ff; /*purple-edge*/
+	color: #aa50dd; /*purple-text*/
+	cursor: pointer;
+}
+
+.pitch > .votes {
+	/* Display */
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 1fr 1fr;
+	/* Alignment */
+	justify-content: center;
+}
+
+	.votes > .counter {
+		/* Color */
+		font-size: 2rem;
+	}
+
+	.votes > .upvote, .downvote {
+		/* Colors */
+		border-color: #3792fe;
+		border-left: 1rem solid transparent;
+		border-right: 1rem solid transparent;
+		/* Display */
+		display: grid
+		height: 0;
+		width: 0;
+		/* Alignment */
+		align-content: center;
+	}
+		.votes > .upvote {
+			border-bottom: 2rem solid; /*aoi-text*/
+		}
+
+		.upvote:hover {
+			border-bottom-color: indigo;
+		}
+
+		.votes > .downvote {
+			border-top: 2rem solid; /*aoi-text*/
+		}
+
+		.downvote:hover {
+			border-top-color: indigo;
+		}
+
+.pitch > .brief {
+	/* Color */
+	font-size: 2rem;
+	font-weight: bold;
+	/* Display */
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: auto auto;
+	/* Alignment */
+	align-content: center;
+}
+
+	.brief > .header > .user {
+		/* Colors */
+		background-color: #3792fe; /*aoi-text*/
+		color: #bdf0f7; /*soft-aoi-highlight*/
+		border-radius: 0.25em;
+		border-style: none;
+		/* Position */
+		margin: 0 0.5em 0 0.5em;
+		padding: 0.125em 0.25em 0.125em 0.25em; 
+	}
+	
+	.pitch:hover > .brief > .header > .user {
+		background-color: #aa50dd; /*purple-text*/
+		color: #e3cdff; /*purple-highlight*/
+	}
+
+	.brief > .date {
+		/* Color */
+		font-size: 1.5rem;
+		/* Position */
+		
+		padding: 0.125em 0.25em 0.125em 0.25em;
+		/* Alignment */
+		text-align: right;
+	}
+
+.pitch > .sub-and-cost {
+	/* Colors */
+	font-size: 1.3rem;
+	/* Display */
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 1fr;
+	/* Alignment */
+	justify-content: center;
+	align-content: center;
+}
+
+.pitch > .sub-and-cost > .subutton,.cost {
+	/* Display */
+	display: grid;
+	/* Alignment */
+	align-content: center;
+}
+
+	.sub-and-cost > .subutton:hover {
+		/* Colors */
+		background-color: #aa50dd; /*purple-text*/
+		color: #e3cdff; /*purple-highlight*/
+	}
+
+#ContentSplit > #ComparisonGraphAndUserinfo {
+	/* Display */
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 2fr;
+	height: 100%;
+	width: 100%;
+}
+
+#ComparisonGraphContainer {
+	/* Display */
+	/* Position */
+	margin: 1rem 1rem 0 1rem;
+}
+
+#ComparisonGraphAndUserinfo > #Userinfo {
+	/* Display */
+	display: grid;
+	grid-template-rows: 1fr 9fr;
+	/* Alignment */
+	align-content: center;
+}

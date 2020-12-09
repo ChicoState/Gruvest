@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_crontab',
     'myapp',
     'chartjs',
     'rest_framework',
@@ -73,6 +74,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
+CRONJOBS = [
+    ('* * * * *', 'myapp.cron.update_stock_objects')
+]
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases

@@ -12,23 +12,14 @@ class UserModel(models.Model):
     header = models.CharField(max_length=100)
     post = models.CharField(max_length=5000)
 
-    # ForeignKey is M:1
-    # Does this mean we design StocksModel to contain one value per field?
-    #stocks = models.ForeignKey(StocksModel, on_delete=models.CASCADE) # what does CASCADE mean?
-
     # how to go about function that calculates portfolio?
-
     # pitcher rankings
-    comparisonSP500 = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    comparisonGruvest = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    userFeedback = models.DecimalField(max_digits=1, decimal_places=1, default=0.0)
 
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
     cost = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     published_on = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return (self.header + "\n" + self.post)
@@ -54,24 +45,24 @@ class UserModel(models.Model):
 
 # Contains stocks
 class StocksModel(models.Model):
-    name = models.CharField(max_length=100)
+    #name = models.CharField(max_length=100) NOT NEEDED BECAUSE ALPHA VANTAGE DOESN'T STORE NAMES
     ticker = models.CharField(max_length=10)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=False)
     closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
     percentageChange = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
 
 # Contains list of all tracked stocks for pitcher
 class TrackedStocksModel(models.Model):
-    pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # 1:1 with pitcher
-    data = models.ManyToManyField(StocksModel)
+    pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # M:1 with pitcher
+    data = models.ManyToManyField(StocksModel) # M:M with stock
     description = models.CharField(max_length=100, default="")
 
     # ENABLE JSON IN SQLITE
     #data = models.JSONField(null=True)
 
     # changes each time category is changed
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateField(auto_now_add=True)
 
     # tracks accuracy of stock % inc/dec
     #accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)

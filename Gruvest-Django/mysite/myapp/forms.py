@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from alpha_vantage.timeseries import TimeSeries
+import pandas as pd
 from . import models
 
 
@@ -84,12 +86,56 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
 
-'''
-class UpdateStocksForm(forms.ModelForm):
+
+class AddStocksForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.StocksModel
+        fields = [
+            "ticker",
+            "date",
+            "closingPrice",
+            "percentageChange"
+        ]
+
+    def save(self, request):
+        ts = TimeSeries(key="VLG4S2J38MECAW2U", output_format='pandas')
+        # Check if stock already in DB
+        #   if yes, get_daily with compact output_size
+
+        # brand new stock
+        # Check stock exists and get data
+        try:
+            data = ts.get_daily(symbol=self.cleaned_data["ticker"], outputsize='full')
+            stock = models.StocksModel()
+            stock.ticker = self.cleaned_data["ticker"]
+            stock.date = data['date'][-1] # last day in data
+            stock.closingPrice = data['4. close'][-1] # last closing price
+            stock.percentageChange = data['4. close'][-1].pct_change() # last closing price in percent change
+        except:
+            print("Ticker doesn't exist") # ts fails or stock doesn't exist
+
+class AddTrackedStocksForm(forms.ModelForm):
     
     class Meta:
         model = models.TrackedStocksModel
         fields = [
-            "percentage"
+            "pitcher",
+            "data",
+            "description",
+            "category"
         ]
-'''
+
+    def save(self, request, pk):
+        trackedStock = models.TrackedStockModel()
+        trackedStock.pitcher = models.UserModel.objects.get(id=pk)
+        # Check if StocksModel of self.cleaned_data["ticker"] already exists
+        #   if it exists
+        #       make sure StocksModel is updated to last closing price, using outputsize='compact'
+        #       set TrackedStock.data to StocksModel
+        #   if it doesn't exist
+        #       create new StocksModel with outputsize='full'
+        #       set TrackedStock.data to StocksModel
+
+        trackedStock.description = self.cleaned_data["description"]
+        trackedStock.category = self.cleaned_data["category"]

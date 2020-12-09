@@ -6,8 +6,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from . import forms
 from . import models
+
+import os
+import numpy as np
+import pandas as pd
+from alpha_vantage.timeseries import TimeSeries
+import time
 
 # Class based views
 '''
@@ -112,7 +119,6 @@ PitchDetail inherits from DetailView
     is a Retrieve operation
 PitchDetail is now UserDetail
 '''
-
 class UserDetail(LoginRequiredMixin, DetailView):
     login_url = '/login/'
     redirect_field_name = 'main'
@@ -229,6 +235,45 @@ def sortedDate(request):
         "subscription":currentSubs,
     }
     return render(request, 'home.html', context=context)
+
+def main(request):
+    title="Gruvest"
+    posts=models.UserModel.objects.all()
+
+    #Get SPY points
+    apiKey = 'VLG4S2J38MECAW2U'
+
+
+    #ts = TimeSeries(key="apiKey", output_format='pandas')
+    #data, meta_data = ts.get_daily(symbol='SPY', outputsize='compact')
+
+    data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+    SPYpoints = data['4. close'].to_numpy()
+
+    SPYdeltas = np.full(100, SPYpoints[-1])
+    SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
+    SPYlabels = list(reversed([*range(len(SPYpoints))]))
+
+    SPYdeltas = list(reversed(SPYdeltas.tolist()))
+    #for i in range(len(SPYpoints)-1):
+    #    SPYdeltas.append( (100*SPYpoints[i]/SPYpoints[0]) - 100)
+
+    if(request.user.is_authenticated):
+        subscriptions=models.SubscribeModel.objects.all()
+        currentSubs=subscriptions.filter(subscriber=request.user)
+    else:
+        currentSubs="Login"
+    context = {
+        "user":request.user,
+        "posts":posts,
+        "title":title,
+        "subs":currentSubs,
+		"SPYlabels":SPYlabels,
+        "SPYdeltas":SPYdeltas
+    }
+    return render(request, "gruvest-main.html", context=context)
 
 # Creates view for upvoting
 # This function is inspired by this stack overflow post: rb.gy/pb8u2y

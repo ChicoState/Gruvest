@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<meta http-equiv="x-ua-compatible" content="ie=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<meta name="author" content="Hanami"/>
+	<title>{{title}}</title>
+	{% load static %}
+	<link type="text/css" rel="stylesheet" href="{% static 'css/main.css'%}"/>
+</head>
+<body>
+	<div id=TopBar>
+		<div id=Logo>
+			Gruvest
+		</div>
+		<div id=Identity>
+		</div>
+	</div>
+	<div id=ContentSplit>
+		<div id=PitchList>
+			{% for post in posts %}
+			<div id="{{post.author}}" class=pitch>
+				<div class=votes>
+					<div class=upvote></div>
+					<div class=counter style="text-align: center;">
+					{{ post.getTotalVotes }}
+					</div>
+					<div class=downvote></div>
+				</div><!--votes-->
+				<div class=brief>
+					<div class=header>
+						<span class=user><!--
+						-->{{post.author}}</span>{{post.header}}
+					</div>
+					<div class=date>
+					{{post.published_on}}
+					</div>
+				</div><!--brief-->
+				<div class=sub-and-cost>
+					<div class=subutton>
+					Subscribe
+					</div>
+					<div class=cost>
+					${{post.get_cost}}
+					</div>
+				</div><!--SubAndButtonCost-->
+			</div><!--Pitch-->
+			{% if user.is_authenticated and post.author not in post.subscriptions %}
+			{% endif %}
+			{% endfor %}
+		</div><!--PitchList-->
+		<div id=ComparisonGraphAndUserinfo>
+			<div id=ComparisonGraphContainer>
+				<canvas id=ComparisonGraph height=0 width=0>
+				Your browser does not support html canvas.
+				</canvas>
+			</div>
+			{% if user.is_authenticated %}
+			<div id=Userinfo>
+				<div id=MyTabs>
+					<div id=MySubscriptionsTab>
+						Subscriptions
+					</div>
+					<div id=MyPortfolioTab>
+						Portfolio
+					</div>
+				</div>
+				<div id=MyFolds>
+					<div id=MySubscriptions>
+					</div>
+					<div id=MyPortfolio>
+					</div>
+				</div>
+			</div><!--userinfo-->
+			{% else %}
+			<div id=LoginForm>
+				<h2>You are not Logged in.</h2>
+				<h1>Go to Login</h1>
+			</div>
+			{% endif %}
+		</div><!--comparison-graph--and--userinfo-->
+	</div><!--content-split-->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+	<script type="text/javascript">
+	function one_time(func) {
+		var canvas;
+		return function() {
+			if(func) {
+				canvas = func.apply();
+				func = null;
+			}
+			return canvas;
+		}
+	}
+	var canvas = one_time(function() {
+		let canvasContainerStyle = window.getComputedStyle(document.getElementById("ComparisonGraphContainer"));
+		var canvas = document.getElementById("ComparisonGraph");
+		canvas.height = parseInt(canvasContainerStyle.height);
+		canvas.width = parseInt(canvasContainerStyle.width);
+		return canvas;
+	})();
+
+	/*let xaxis = [...Array(100).keys()]*/
+var ctx = document.getElementById('ComparisonGraph').getContext('2d');
+var myChart = new Chart(ctx, {
+	animationEnabled: false,
+    type: 'line',
+    data: {
+        labels: {{SPYlabels}},
+		datasets: [{
+			label: '% change',
+			data: {{SPYdeltas}},
+			backgroundColor: [
+				'rgba(255, 99, 132, 0.2)',
+				'rgba(54, 162, 235, 0.2)',
+				'rgba(255, 206, 86, 0.2)',
+				'rgba(75, 192, 192, 0.2)',
+				'rgba(153, 102, 255, 0.2)',
+				'rgba(255, 159, 64, 0.2)'
+			],
+			borderColor: '#5dbcd2',
+			borderWidth: 3,
+			fill: false,
+		}]
+		},
+		options: {
+			elements: {
+				line: {
+					tension: 0 /* disables bezier curves */
+				}
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
+	});
+	</script>
+</body>
+</html>
