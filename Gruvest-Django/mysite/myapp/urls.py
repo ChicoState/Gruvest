@@ -20,10 +20,6 @@ urlpatterns = [
     path('date/', views.sortedDate, name="sortedDate"),
     path('chartjs/', chartViews.HomeView.as_view(), name='chart'),
     path('api', chartViews.ChartData.as_view(), name='chartData'),
-<<<<<<< HEAD
     path('main', views.main, name='MAIN'),
 ]
-=======
-]
 
->>>>>>> 5f9295ad2221a22d4be58b61ed63dc506ded1a71
