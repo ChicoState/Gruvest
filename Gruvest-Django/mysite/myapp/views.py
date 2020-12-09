@@ -220,6 +220,16 @@ def index(request):
     title = "Gruvest"
     posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getTotalVotes(), reverse=True)
+    data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+    SPYpoints = data['4. close'].to_numpy()
+
+    SPYdeltas = np.full(100, SPYpoints[-1])
+    SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
+    SPYlabels = list(reversed([*range(len(SPYpoints))]))
+
+    SPYdeltas = list(reversed(SPYdeltas.tolist()))
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
@@ -230,7 +240,8 @@ def index(request):
         "post":sortedPosts,
         "title":title,
         "subscription":currentSubs,
-
+        "SPYlabels":SPYlabels,
+        "SPYdeltas":SPYdeltas
     }
     return render(request, "home.html", context = context)
 
@@ -273,7 +284,7 @@ def main(request):
     posts=models.UserModel.objects.all()
 
     #Get SPY points
-    apiKey = 'VLG4S2J38MECAW2U'
+    #apiKey = 'VLG4S2J38MECAW2U'
 
 
     #ts = TimeSeries(key="apiKey", output_format='pandas')

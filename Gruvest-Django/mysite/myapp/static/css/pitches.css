@@ -99,7 +99,7 @@
     display: inline-block;
 }
 
-#ContentSplit > #ComparisonGraphAndUserinfo {
+#ComparisonGraphAndUserinfo {
 	/* Display */
 	display: grid;
 	grid-template-columns: auto;
@@ -110,6 +110,8 @@
 
 #ComparisonGraphContainer {
 	/* Display */
+	height: 30vh;
+	width: 40vw;
 	/* Position */
 	margin: 1rem 1rem 0 1rem;
 }

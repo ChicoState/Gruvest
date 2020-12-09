@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+
 <div>
     {% if user.is_authenticated %}
     Current Funds: ${{ user.catchermodel.funds }}
@@ -7,11 +8,19 @@
     Current Funds: $0
     {% endif %}
 </div>
+
 <a href="/" class="button">Popularity</a>
 <a href="{% url 'sortedCost' %}" class="button">Cost</a>
 <a href="{% url 'sortedDate' %}" class="button">Date</a>
 <p> sorted by: {{sort}} </p>
-<ul class="pitch-list-column">
+
+<div id=GridContainer style="
+	display: grid;
+	grid-template-columns: 7fr 5fr;
+	grid-template-rows: auto;
+">
+
+<div class="pitch-list-column">
     {% for pItor in post %}
     <p class="net-votes">{{pItor.getTotalVotes}}</p>
     <div class="pitch-list">
@@ -42,18 +51,19 @@
         <br>
     </div>
     {% endfor %}
-</ul>
 </div>
 
-<div id=ComparisonGraphAndUserinfo>
+<div id=ComparisonGraphAndUserinfo style="
+	display: grid;
+	grid-template-rows: 4fr 1fr 4fr;
+">
     <div id=ComparisonGraphContainer>
         <canvas id=ComparisonGraph height=0 width=0>
             Your browser does not support html canvas.
         </canvas>
     </div>
+
     {% if user.is_authenticated %}
-
-
     <div class="notebook">
         <button class="tablinks" onclick="openTab(event, 'subscriptions')">Subscriptions</button>
         <button class="tablinks" onclick="openTab(event, 'subscribers')">Subscribers</button>
@@ -66,17 +76,14 @@
                 {% for itor in subscription %}
                 {{ itor.pitcher }}
                 <br></br>
-            {% endfor %}
+            	{% endfor %}
             {% endif %}
         </div>
 
     </div>
 
     <div id="subscribers" class="tabcontent">
-        <!--<h3>Subscribers</h3>-->
-
     </div>
-    <!--userinfo-->
     {% else %}
     <div id=LoginForm>
         <h2>You are not Logged in.</h2>
@@ -85,8 +92,8 @@
     {% endif %}
 </div>
 <!--comparison-graph--and--userinfo-->
-</div>
-<!--content-split-->
+</div><!--GridContainer-->
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script type="text/javascript">
     function one_time(func) {
