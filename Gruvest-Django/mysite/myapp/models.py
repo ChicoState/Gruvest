@@ -14,16 +14,12 @@ class UserModel(models.Model):
 
     # how to go about function that calculates portfolio?
     # pitcher rankings
-    #comparisonSP500 = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    #comparisonGruvest = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    #userFeedback = models.DecimalField(max_digits=1, decimal_places=1, default=0.0)
 
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
     cost = models.PositiveIntegerField(default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     published_on = models.DateTimeField(auto_now_add=True)
-
 
     def __str__(self):
         return (self.header + "\n" + self.post)
