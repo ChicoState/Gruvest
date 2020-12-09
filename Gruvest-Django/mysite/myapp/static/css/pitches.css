@@ -4,6 +4,7 @@
     width: 1000px;
     height: 100%;
     margin: auto;
+    display: inline-block;
 }
 
 .net-votes
@@ -92,4 +93,69 @@
     color: dodgerblue;
     float: left;
     padding: 0px 10px;
+}
+
+#ComparisonGraphAndUserinfo {
+    display: inline-block;
+}
+
+#ContentSplit > #ComparisonGraphAndUserinfo {
+	/* Display */
+	display: grid;
+	grid-template-columns: auto;
+	grid-template-rows: 1fr 2fr;
+	height: 100%;
+	width: 100%;
+}
+
+#ComparisonGraphContainer {
+	/* Display */
+	/* Position */
+	margin: 1rem 1rem 0 1rem;
+}
+
+#ComparisonGraphAndUserinfo > #Userinfo {
+	/* Display */
+	display: grid;
+	grid-template-rows: 1fr 9fr;
+	/* Alignment */
+	align-content: center;
+}
+
+
+/* Style the tab */
+.notebook {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+}
+  
+  /* Style the buttons inside the tab */
+.notebook button {
+	background-color: inherit;
+	float: left;
+	border: none;
+	outline: none;
+	cursor: pointer;
+	padding: 14px 16px;
+	transition: 0.3s;
+	font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.notebook button:hover {
+	background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.notebook button.active {
+	background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+	display: none;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-top: none;
 }

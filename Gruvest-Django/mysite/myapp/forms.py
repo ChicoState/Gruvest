@@ -87,6 +87,26 @@ class RegistrationForm(UserCreationForm):
         return user
 
 
+#Brandon's StocksForm
+class StocksForm(forms.ModelForm):
+    # meta class
+    class Meta:
+        # model to be used
+        model = models.StocksModel
+        # fields to be used
+        fields = [
+           "ticker",
+        ]
+        def save(self, request):
+            stock_instance = models.StocksModel()
+            stock_instance.ticker = self.cleaned_data["ticker"]
+            stock_instance.pitcher = request.user
+            #stock_instance.date = date.today()
+            stock_instance.save()
+            return stock_instance
+#End message
+
+
 class AddStocksForm(forms.ModelForm):
     
     class Meta:
@@ -94,8 +114,7 @@ class AddStocksForm(forms.ModelForm):
         fields = [
             "ticker",
             "date",
-            "closingPrice",
-            "percentageChange"
+            "pitcher"
         ]
 
     def save(self, request):

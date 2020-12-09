@@ -45,11 +45,9 @@ class UserModel(models.Model):
 
 # Contains stocks
 class StocksModel(models.Model):
-    #name = models.CharField(max_length=100) NOT NEEDED BECAUSE ALPHA VANTAGE DOESN'T STORE NAMES
     ticker = models.CharField(max_length=10)
-    date = models.DateField(auto_now_add=False)
-    closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
-    percentageChange = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    date = models.DateField(auto_now_add=False)#was False before Brandon's change
+    pitcher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stock_user')
 
 
 # Contains list of all tracked stocks for pitcher

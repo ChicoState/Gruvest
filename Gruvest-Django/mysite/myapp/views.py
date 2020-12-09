@@ -154,7 +154,39 @@ class UserDetail(LoginRequiredMixin, DetailView):
                 'object': post
             }
             return render(request, "view_pitch_NS.html", context = context)
-            
+
+
+class StockAdder(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'main'
+    # the associated html template
+    template_name = "add_stock.html"
+    # specified model which this object creates
+    model = models.StocksModel
+    # specified fields to be entered by user
+    fields = [
+        'ticker',
+    ]
+    form = forms.StocksForm
+    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    success_url = '/'
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        #try:
+           #models.StocksModel.objects.get(pitcher=request.user, ticker=str(form_instance['ticker'].value()))   
+        #except models.StocksModel.DoesNotExist:
+        if form_instance.is_valid():
+            form_instance.save(request)
+        return HttpResponseRedirect(reverse("main"))
+
+    # error checking form
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form) # call parent object method
+
+    def get_success_url(self):
+        return '/'
+
 
 '''
 class TrackedStockUpdateView(UpdateView):

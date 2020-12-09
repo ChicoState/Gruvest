@@ -3,11 +3,6 @@
 <div>
     {% if user.is_authenticated %}
     Current Funds: ${{ user.catchermodel.funds }}
-    Subscriptions:
-    {% for itor in subscription %}
-        {{ itor.pitcher }}
-    {% endfor %}
-
     {% else %}
     Current Funds: $0
     {% endif %}
@@ -35,8 +30,8 @@
         <div class="abstracted-pitch-info">
             <a href="{% url 'pitchDetail' pItor.pk %}" id="pitch-title">{{pItor.header}}</a>
             <p id="abstracted-pitch-info-cost">Pitcher: {{pItor.author}}</p>
-            <p id="abstracted-pitch-info-cost">Made On: {{pItor.published_on}}</p>
-            <p id="abstracted-pitch-info-cost">Cost: {{pItor.cost}}</p>
+            <!--<p id="abstracted-pitch-info-cost">Made On: {{pItor.published_on}}</p>-->
+            <p id="abstracted-pitch-info-cost">Price: ${{pItor.cost}}</p>
             <form action="{% url 'sub' pItor.id %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" name="post_id" value="{{ pItor.id }}" id="subscribe-button">
@@ -49,4 +44,128 @@
     {% endfor %}
 </ul>
 </div>
+
+<div id=ComparisonGraphAndUserinfo>
+    <div id=ComparisonGraphContainer>
+        <canvas id=ComparisonGraph height=0 width=0>
+            Your browser does not support html canvas.
+        </canvas>
+    </div>
+    {% if user.is_authenticated %}
+
+
+    <div class="notebook">
+        <button class="tablinks" onclick="openTab(event, 'subscriptions')">Subscriptions</button>
+        <button class="tablinks" onclick="openTab(event, 'subscribers')">Subscribers</button>
+    </div>
+
+    <div id="subscriptions" class="tabcontent">
+        <!--<h3>Subscriptions</h3>-->
+        <div>
+            {% if user.is_authenticated %}
+                {% for itor in subscription %}
+                {{ itor.pitcher }}
+                <br></br>
+            {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div id="subscribers" class="tabcontent">
+        <!--<h3>Subscribers</h3>-->
+
+    </div>
+    <!--userinfo-->
+    {% else %}
+    <div id=LoginForm>
+        <h2>You are not Logged in.</h2>
+        <h1>Go to Login</h1>
+    </div>
+    {% endif %}
+</div>
+<!--comparison-graph--and--userinfo-->
+</div>
+<!--content-split-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type="text/javascript">
+    function one_time(func) {
+        var canvas;
+        return function () {
+            if (func) {
+                canvas = func.apply();
+                func = null;
+            }
+            return canvas;
+        }
+    }
+    var canvas = one_time(function () {
+        let canvasContainerStyle = window.getComputedStyle(document.getElementById("ComparisonGraphContainer"));
+        var canvas = document.getElementById("ComparisonGraph");
+        canvas.height = parseInt(canvasContainerStyle.height);
+        canvas.width = parseInt(canvasContainerStyle.width);
+        return canvas;
+    })();
+
+    /*let xaxis = [...Array(100).keys()]*/
+    var ctx = document.getElementById('ComparisonGraph').getContext('2d');
+    var myChart = new Chart(ctx, {
+        animationEnabled: false,
+        type: 'line',
+        data: {
+            labels: {{ SPYlabels }},
+    datasets: [{
+        label: '% change',
+        data: {{ SPYdeltas }},
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+    ],
+        borderColor: '#5dbcd2',
+        borderWidth: 3,
+        fill: false,
+    }]
+    },
+    options: {
+        elements: {
+            line: {
+                tension: 0 /* disables bezier curves */
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+<script>
+    function openTab(evt, tabName) {
+        // Declare all variables
+        var i, tabcontent, tablinks;
+
+        // Get all elements with class="tabcontent" and hide them
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+
+        // Get all elements with class="tablinks" and remove the class "active"
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+
+        // Show the current tab, and add an "active" class to the button that opened the tab
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    } 
+</script>
 {% endblock %}
