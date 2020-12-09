@@ -144,15 +144,27 @@ class UserDetail(LoginRequiredMixin, DetailView):
             is_subscribed = True
         except models.SubscribeModel.DoesNotExist:
             pass
+
+        data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+        SUMpoints = data['4. close'].to_numpy()
+
+        SUMdeltas = np.full(100, SUMpoints[-1])
+        SUMdeltas = 100*SUMpoints/SUMdeltas-100
+
+
+        SUMlabels = list(reversed([*range(len(SUMpoints))]))
+        SUMdeltas = list(reversed(SUMdeltas.tolist()))
+
+        context = {
+            'object': post,
+            'SUMlabels': SUMlabels,
+            'SUMdeltas': SUMdeltas
+        }
+
         if(is_subscribed or post.author == request.user):
-            context = {
-                'object': post
-            }
             return render(request, "view_pitch.html", context = context)
         else:
-            context = {
-                'object': post
-            }
             return render(request, "view_pitch_NS.html", context = context)
 
 

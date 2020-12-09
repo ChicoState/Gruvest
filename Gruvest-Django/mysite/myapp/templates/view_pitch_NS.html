@@ -20,6 +20,19 @@
         {% endif %}
     </div>
 
+<div id=GridContainer style="
+	display: grid;
+	justify-content: center;
+">
+    <div id=ComparisonGraphContainer style="
+		height: 30vh; 
+		width: 60vw;
+	">
+        <canvas id=ComparisonGraph height=0 width=0>
+            Your browser does not support html canvas.
+        </canvas>
+    </div>	
+
     <div class="detail-page">
         <p class="net-votes">{{object.getTotalVotes}}</p>
         <div class="pitch-list">
@@ -57,6 +70,66 @@
             </div>
         </div>
     </div>
+</div><!--GridContainer-->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script type="text/javascript">
+    function one_time(func) {
+        var canvas;
+        return function () {
+            if (func) {
+                canvas = func.apply();
+                func = null;
+            }
+            return canvas;
+        }
+    }
+    var canvas = one_time(function () {
+        let canvasContainerStyle = window.getComputedStyle(document.getElementById("ComparisonGraphContainer"));
+        var canvas = document.getElementById("ComparisonGraph");
+        canvas.height = parseInt(canvasContainerStyle.height);
+        canvas.width = parseInt(canvasContainerStyle.width);
+        return canvas;
+    })();
+
+    /*let xaxis = [...Array(100).keys()]*/
+    var ctx = document.getElementById('ComparisonGraph').getContext('2d');
+    var myChart = new Chart(ctx, {
+        animationEnabled: false,
+        type: 'line',
+        data: {
+            labels: {{ SUMlabels }},
+    datasets: [{
+        label: '% change',
+        data: {{ SUMdeltas }},
+        backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)',
+        'rgba(153, 102, 255, 0.2)',
+        'rgba(255, 159, 64, 0.2)'
+    ],
+        borderColor: '#5dbcd2',
+        borderWidth: 3,
+        fill: false,
+    }]
+    },
+    options: {
+        elements: {
+            line: {
+                tension: 0 /* disables bezier curves */
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
 </body>
 
 {% endblock %}
