@@ -12,12 +12,7 @@ class UserModel(models.Model):
     header = models.CharField(max_length=100)
     post = models.CharField(max_length=5000)
 
-    # ForeignKey is M:1
-    # Does this mean we design StocksModel to contain one value per field?
-    #stocks = models.ForeignKey(StocksModel, on_delete=models.CASCADE) # what does CASCADE mean?
-
     # how to go about function that calculates portfolio?
-
     # pitcher rankings
 
     upVotes = models.IntegerField(default=0)
