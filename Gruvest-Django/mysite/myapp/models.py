@@ -65,6 +65,7 @@ class StocksModel(models.Model):
 class TrackedStocksModel(models.Model):
     pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # 1:1 with pitcher
     data = models.ManyToManyField(StocksModel)
+    ticker = models.CharField(max_length=10)
     description = models.CharField(max_length=100, default="")
 
     # ENABLE JSON IN SQLITE

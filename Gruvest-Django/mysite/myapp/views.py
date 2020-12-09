@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from datetime import datetime
 from . import forms
 from . import models
 
@@ -38,6 +39,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
                 obj.post = form_instance.cleaned_data["post"]
                 obj.header = form_instance.cleaned_data["header"]
                 obj.cost = form_instance.cleaned_data["cost"]
+                obj.published_on = datetime.now()
                 obj.save()
         except models.UserModel.DoesNotExist:
             if form_instance.is_valid():
@@ -185,11 +187,16 @@ def index(request):
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        subPages = set()
+        for itor in currentSubs:
+            subPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subPages = "Login"
     context = {
         "sort":"Popularity",
         "post":sortedPosts,
+        "subPages":subPages,
         "title":title,
         "subscription":currentSubs,
 
@@ -203,11 +210,16 @@ def sortedCost(request):
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        subPages = set()
+        for itor in currentSubs:
+            subPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subPages = "Login"
     context = {
         "sort": "Cost",
         "post":sortedPosts,
+        "subPages":subPages,
         "title":title,
         "subscription":currentSubs,
     }
@@ -220,11 +232,16 @@ def sortedDate(request):
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        subPages = set()
+        for itor in currentSubs:
+            subPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subPages = "login"
     context = {
         "sort": "Date",
         "post":sortedPosts,
+        "subPages":subPages,
         "title":title,
         "subscription":currentSubs,
     }

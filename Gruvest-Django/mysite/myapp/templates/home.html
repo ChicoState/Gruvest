@@ -4,8 +4,8 @@
     {% if user.is_authenticated %}
     Current Funds: ${{ user.catchermodel.funds }}
     Subscriptions:
-    {% for itor in subscription %}
-        {{ itor.pitcher }}
+    {% for itor in subPages %}
+    <a href="{% url 'pitchDetail' itor.pk %}" id="pitch-title">{{itor.author}}</a>
     {% endfor %}
 
     {% else %}
@@ -14,7 +14,7 @@
 </div>
 <a href="/" class="button">Popularity</a>
 <a href="{% url 'sortedCost' %}" class="button">Cost</a>
-<a href="{% url 'sortedDate' %}" class="button">Date</a>
+<a href="{% url 'sortedDate' %}" class="button">New</a>
 <p> sorted by: {{sort}} </p>
 <ul class="pitch-list-column">
     {% for pItor in post %}

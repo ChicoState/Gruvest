@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from alpha_vantage.timeseries import TimeSeries
+from datetime import date
 from . import models
 
 
@@ -84,12 +86,73 @@ class RegistrationForm(UserCreationForm):
             user.save()
         return user
 
-'''
-class UpdateStocksForm(forms.ModelForm):
+class AddStocksForm(forms.ModelForm):
+    
+    class Meta:
+        model = models.StocksModel
+        fields = [
+            "ticker",
+            "date",
+            "closingPrice",
+            "percentageChange"
+        ]
+
+    def save(self, request):
+        ts = TimeSeries(key="VLG4S2J38MECAW2U", output_format='pandas')
+        # Check if stock already in DB
+        #   if yes, get_daily with compact output_size
+
+        # brand new stock
+        # Check stock exists and get data
+        try:
+            data = ts.get_daily(symbol=self.cleaned_data["ticker"], outputsize='full')
+            stock = models.StocksModel()
+            stock.ticker = self.cleaned_data["ticker"]
+            stock.date = data['date'][-1] # last day in data
+            stock.closingPrice = data['4. close'][-1] # last closing price
+            stock.percentageChange = data['4. close'][-1].pct_change() # last closing price in percent change
+        except:
+            print("Ticker doesn't exist") # ts fails or stock doesn't exist
+
+
+class AddTrackedStocksForm(forms.ModelForm):
     
     class Meta:
         model = models.TrackedStocksModel
         fields = [
-            "percentage"
+            "ticker",
+            "description",
+            "category"
         ]
-'''
+
+    def save(self, request, pk):
+        trackedStock = models.TrackedStockModel()
+        trackedStock.pitcher = request.user
+        trackedStock.description = self.cleaned_data["description"]
+        trackedStock.category = self.cleaned_data["category"]
+        trackedStock.ticker = self.cleaned_data["ticker"]
+        ts = TimeSeries(key="VLG4S2J38MECAW2U", output_format='pandas')
+        try:
+            obj = models.StocksModel.objects.get(ticker=trackedStock.ticker, date=date.today())
+            trackedStock.data = obj
+        except:
+            try:
+                data = ts.get_daily(symbol=trackedStock.ticker, outputsize='compact')
+                obj2 = models.StocksModel.objects.get(ticker=trackedStock.ticker)
+
+            except:
+            #data['4. close'][-1] last closing price
+            #data['4. close'][-1].pct_change() # last closing price in percent change
+                itor = None
+                while itor != date.today():
+                    models.StocksModel.objects.create(ticker=trackedStock.ticker, date=date.today(), closingPrice=data['4. close'][-1], percentageChange=data['4. close'][-1].pct_change())
+                    itor = 
+        
+        
+        # Check if StocksModel of self.cleaned_data["ticker"] already exists
+        #   if it exists
+        #       make sure StocksModel is updated to last closing price, using outputsize='compact'
+        #       set TrackedStock.data to StocksModel
+        #   if it doesn't exist
+        #       create new StocksModel with outputsize='full'
+        #       set TrackedStock.data to StocksModel
