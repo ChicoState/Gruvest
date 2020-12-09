@@ -203,15 +203,22 @@ def main(request):
     title="Gruvest"
     posts=models.UserModel.objects.all()
 
-    #def get_alphavantage_data():
-    #avd = get_alphavantage_data()
+    #Get SPY points
+    apiKey = 'VLG4S2J38MECAW2U'
 
-    SPYpoints = random.sample(range(200,400), 100)
+    ts = TimeSeries(key="apiKey", output_format='pandas')
+    data, meta_data = ts.get_daily(symbol='SPY', outputsize='compact')
 
-    SPYdeltas = [0]
+    SPYpoints = data['4. close'].to_numpy()
+
+    SPYdeltas = np.full(100, SPYpoints[-1])
+    SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
     SPYlabels = list(reversed([*range(len(SPYpoints))]))
-    for i in range(len(SPYpoints)-1):
-        SPYdeltas.append( (100*SPYpoints[i]/SPYpoints[0]) - 100)
+
+    SPYdeltas = list(reversed(SPYdeltas.tolist()))
+    #for i in range(len(SPYpoints)-1):
+    #    SPYdeltas.append( (100*SPYpoints[i]/SPYpoints[0]) - 100)
 
     if(request.user.is_authenticated):
         subscriptions=models.SubscribeModel.objects.all()
