@@ -9,6 +9,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from . import forms
 from . import models
 
+import numpy as np
+import pandas as pd
+from alpha_vantage.timeseries import TimeSeries
+import time
+
 # Class based views
 '''
 PitchCreator inherits from CreateView
@@ -192,6 +197,36 @@ def index(request):
     }
     return render(request, "home.html", context = context)
 
+import random
+
+def main(request):
+    title="Gruvest"
+    posts=models.UserModel.objects.all()
+
+    #def get_alphavantage_data():
+    #avd = get_alphavantage_data()
+
+    SPYpoints = random.sample(range(200,400), 100)
+
+    SPYdeltas = [0]
+    SPYlabels = list(reversed([*range(len(SPYpoints))]))
+    for i in range(len(SPYpoints)-1):
+        SPYdeltas.append( (100*SPYpoints[i]/SPYpoints[0]) - 100)
+
+    if(request.user.is_authenticated):
+        subscriptions=models.SubscribeModel.objects.all()
+        currentSubs=subscriptions.filter(subscriber=request.user)
+    else:
+        currentSubs="Login"
+    context = {
+        "user":request.user,
+        "posts":posts,
+        "title":title,
+        "subs":currentSubs,
+		"SPYlabels":SPYlabels,
+        "SPYdeltas":SPYdeltas
+    }
+    return render(request, "gruvest-main.html", context=context)
 
 # Creates view for upvoting
 # This function is inspired by this stack overflow post: rb.gy/pb8u2y
