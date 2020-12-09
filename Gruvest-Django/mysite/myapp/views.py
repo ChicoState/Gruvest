@@ -6,9 +6,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from . import forms
 from . import models
 
+import os
 import numpy as np
 import pandas as pd
 from alpha_vantage.timeseries import TimeSeries
@@ -197,7 +199,6 @@ def index(request):
     }
     return render(request, "home.html", context = context)
 
-import random
 
 def main(request):
     title="Gruvest"
@@ -206,8 +207,11 @@ def main(request):
     #Get SPY points
     apiKey = 'VLG4S2J38MECAW2U'
 
-    ts = TimeSeries(key="apiKey", output_format='pandas')
-    data, meta_data = ts.get_daily(symbol='SPY', outputsize='compact')
+
+    #ts = TimeSeries(key="apiKey", output_format='pandas')
+    #data, meta_data = ts.get_daily(symbol='SPY', outputsize='compact')
+
+    data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
 
     SPYpoints = data['4. close'].to_numpy()
 
