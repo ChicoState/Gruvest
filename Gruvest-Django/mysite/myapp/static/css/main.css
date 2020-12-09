@@ -42,11 +42,6 @@ body * {
 	border-style: solid;
 	border-width: thin;
 
-	/*
-	background-color: inherit;
-	border-color: inherit;
-	color: inherit;
-	*/
 }
 
 body > #TopBar {
