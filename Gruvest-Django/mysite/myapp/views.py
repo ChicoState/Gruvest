@@ -457,6 +457,7 @@ def downVoteView(request, pk):
         post.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+#login/register system made with help with code provided by Professor Dixon https://github.com/CSUChico-CINS465/CINS465-F20-Examples 
 def logout_view(request):
     logout(request)
     return redirect("/login/")

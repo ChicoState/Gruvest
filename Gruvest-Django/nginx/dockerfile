@@ -1,3 +1,4 @@
+#file provide by Professor Dixon https://github.com/CSUChico-CINS465/CINS465-F20-Examples 
 FROM nginx:latest
 RUN rm /etc/nginx/conf.d/default.conf
 COPY sites-enabled /etc/nginx/conf.d
