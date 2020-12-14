@@ -11,7 +11,7 @@
 
 <a href="/" class="button">Popularity</a>
 <a href="{% url 'sortedCost' %}" class="button">Cost</a>
-<a href="{% url 'sortedDate' %}" class="button">Date</a>
+<a href="{% url 'sortedDate' %}" class="button">New</a>
 <p> sorted by: {{sort}} </p>
 
 <div id=GridContainer style="
@@ -73,16 +73,20 @@
         <!--<h3>Subscriptions</h3>-->
         <div>
             {% if user.is_authenticated %}
-                {% for itor in subscription %}
-                {{ itor.pitcher }}
-                <br></br>
-            	{% endfor %}
+            {% for itor in subsPages %}
+            <a href="{% url 'pitchDetail' itor.pk %}" >{{itor.author}}</a>
+            <br></br>
+            {% endfor %}
             {% endif %}
         </div>
 
     </div>
 
     <div id="subscribers" class="tabcontent">
+    {% for itor in usersSubToUser %}
+    {{itor.subscriber}}
+    <br></br>
+    {% endfor %}
     </div>
     {% else %}
     <div id=LoginForm>
@@ -176,3 +180,5 @@
     } 
 </script>
 {% endblock %}
+
+

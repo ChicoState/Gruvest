@@ -6,8 +6,4 @@ install:
   - pip install -r Gruvest-Django/requirements.txt
 # command to run tests
 script:
-<<<<<<< HEAD
   - python Gruvest-Django/mysite/manage.py test
-=======
- - python Gruvest-Django/mysite/manage.py test 
->>>>>>> 5f9295ad2221a22d4be58b61ed63dc506ded1a71

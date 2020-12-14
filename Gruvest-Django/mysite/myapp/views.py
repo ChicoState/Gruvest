@@ -7,6 +7,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.conf import settings
+from datetime import datetime
 from . import forms
 from . import models
 
@@ -45,6 +46,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
                 obj.post = form_instance.cleaned_data["post"]
                 obj.header = form_instance.cleaned_data["header"]
                 obj.cost = form_instance.cleaned_data["cost"]
+                obj.published_on = datetime.now()
                 obj.save()
         except models.UserModel.DoesNotExist:
             if form_instance.is_valid():
@@ -255,15 +257,23 @@ def index(request):
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        usersSubToUser = models.SubscribeModel.objects.filter(pitcher = request.user)
+        subsPages = set()
+        for itor in currentSubs:
+            subsPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subsPages = "Login"
+        usersSubToUser = "Login"
     context = {
         "sort":"Popularity",
+        "subsPages":subsPages,
         "post":sortedPosts,
+        "usersSubToUser":usersSubToUser,
         "title":title,
         "subscription":currentSubs,
         "SPYlabels":SPYlabels,
-        "SPYdeltas":SPYdeltas
+        "SPYdeltas":SPYdeltas,
     }
     return render(request, "home.html", context = context)
 
@@ -271,16 +281,35 @@ def sortedCost(request):
     title = "Gruvest"
     posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getCost(), reverse=True)
+    data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+    SPYpoints = data['4. close'].to_numpy()
+
+    SPYdeltas = np.full(100, SPYpoints[-1])
+    SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
+    SPYlabels = list(reversed([*range(len(SPYpoints))]))
+
+    SPYdeltas = list(reversed(SPYdeltas.tolist()))
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        usersSubToUser = models.SubscribeModel.objects.filter(pitcher = request.user)
+        subsPages = set()
+        for itor in currentSubs:
+            subsPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subsPages = "Login"
+        usersSubToUser = "Login"
     context = {
         "sort": "Cost",
         "post":sortedPosts,
+        "usersSubToUser":usersSubToUser,
         "title":title,
         "subscription":currentSubs,
+        "SPYlabels":SPYlabels,
+        "SPYdeltas":SPYdeltas,
     }
     return render(request, 'home.html', context=context)
 
@@ -288,16 +317,35 @@ def sortedDate(request):
     title = "Gruvest"
     posts = models.UserModel.objects.all()
     sortedPosts = sorted(posts, key=lambda self: self.getDate(), reverse=True)
+    data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+    SPYpoints = data['4. close'].to_numpy()
+
+    SPYdeltas = np.full(100, SPYpoints[-1])
+    SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
+    SPYlabels = list(reversed([*range(len(SPYpoints))]))
+
+    SPYdeltas = list(reversed(SPYdeltas.tolist()))
     if(request.user.is_authenticated):
         subscriptions = models.SubscribeModel.objects.all()
         currentSubs = subscriptions.filter(subscriber = request.user)
+        usersSubToUser = models.SubscribeModel.objects.filter(pitcher = request.user)
+        subsPages = set()
+        for itor in currentSubs:
+            subsPages.add(models.UserModel.objects.get(author=itor.pitcher))
     else:
         currentSubs = "Login"
+        subsPages = "Login"
+        usersSubToUser = "Login"
     context = {
         "sort": "Date",
         "post":sortedPosts,
+        "usersSubToUser":usersSubToUser,
         "title":title,
         "subscription":currentSubs,
+        "SPYlabels":SPYlabels,
+        "SPYdeltas":SPYdeltas,
     }
     return render(request, 'home.html', context=context)
 
