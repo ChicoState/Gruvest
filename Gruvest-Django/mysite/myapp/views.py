@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from datetime import date
 from . import forms
 from . import models
 
@@ -38,6 +39,7 @@ class PitchCreator(LoginRequiredMixin, CreateView):
                 obj.post = form_instance.cleaned_data["post"]
                 obj.header = form_instance.cleaned_data["header"]
                 obj.cost = form_instance.cleaned_data["cost"]
+                obj.published = date.today()
                 obj.save()
         except models.UserModel.DoesNotExist:
             if form_instance.is_valid():
@@ -51,6 +53,67 @@ class PitchCreator(LoginRequiredMixin, CreateView):
     
     def get_success_url(self):
         return '/'
+
+class StockAdder(LoginRequiredMixin, CreateView):
+    login_url = '/login/'
+    redirect_field_name = 'main'
+    # the associated html template
+    template_name = "add_stock.html"
+    # specified model which this object creates
+    model = models.StocksModel
+    # specified fields to be entered by user
+    fields = [
+        'ticker',
+    ]
+    form = forms.StocksForm
+    # upon creation, stay on current page (which is main since PostModel redirects to main)
+    success_url = '/'
+    def post(self, request, *args, **kwargs):
+        form_instance = self.form(request.POST)
+        #try:
+           #models.StocksModel.objects.get(pitcher=request.user, ticker=str(form_instance['ticker'].value()))   
+        #except models.StocksModel.DoesNotExist:
+        if form_instance.is_valid():
+            form_instance.save(request)
+        return HttpResponseRedirect(reverse("main"))
+
+    # error checking form
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form) # call parent object method
+    
+    def get_success_url(self):
+        return '/'
+
+
+class AddFunds(UpdateView):
+    # the associated html template
+    template_name = "add_funds.html"
+    # specified model which this object creates
+    model = models.CatcherModel
+    # specified fields to be entered by user
+    fields = [
+        'funds'
+    ]
+    form = forms.AddFundsForm
+    # upon creation, stay on current page (which is main since UserModel redirects to main)
+    success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        form = self.form(request.POST)
+        if form.is_valid():
+            request.user.catchermodel.funds += int(form['funds'].value())
+            request.user.catchermodel.save()
+        return HttpResponseRedirect(reverse("main"))
+    # error checking form
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form) # call parent object method
+    
+    def get_success_url(self):
+        return '/'
+
+
 
 class CommentCreator(LoginRequiredMixin, CreateView):
     login_url = '/login/'
@@ -79,33 +142,6 @@ class CommentCreator(LoginRequiredMixin, CreateView):
     
     def get_success_url(self):
         return "/"
-
-class AddFunds(UpdateView):
-    # the associated html template
-    template_name = "add_funds.html"
-    # specified model which this object creates
-    model = models.CatcherModel
-    # specified fields to be entered by user
-    fields = [
-        'funds'
-    ]
-    form = forms.AddFundsForm
-    # upon creation, stay on current page (which is main since UserModel redirects to main)
-    success_url = '/'
-
-    def post(self, request, *args, **kwargs):
-        form = self.form(request.POST)
-        if form.is_valid():
-            request.user.catchermodel.funds += int(form['funds'].value())
-            request.user.catchermodel.save()
-        return HttpResponseRedirect(reverse("main"))
-    # error checking form
-    def form_valid(self, form):
-        print(form.cleaned_data)
-        return super().form_valid(form) # call parent object method
-    
-    def get_success_url(self):
-        return '/'
 
 '''
 PitchDetail inherits from DetailView
@@ -236,7 +272,8 @@ def sortedDate(request):
 def upVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
+    #request.POST.get('post_id')
+    post = get_object_or_404(models.UserModel, id=pk)
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -270,7 +307,8 @@ def upVoteView(request, pk):
 def downVoteView(request, pk):
     is_liked = False
     is_disliked = False
-    post = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
+    #equest.POST.get('post_id')
+    post = get_object_or_404(models.UserModel, id=pk)
     try:
         models.UpvoteModel.objects.get(upvotedPost = post, upvoter=request.user)
         is_liked = True
@@ -319,8 +357,9 @@ def register(request):
 @login_required(redirect_field_name='main')
 def subscribeView(request, pk):
     is_subscribed = False
+    #request.POST.get('post_id')
     currentFunds = request.user.catchermodel.funds
-    subcription = get_object_or_404(models.UserModel, id=request.POST.get('post_id'))
+    subcription = get_object_or_404(models.UserModel, id=pk)
     if(request.user == subcription.author):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     try:

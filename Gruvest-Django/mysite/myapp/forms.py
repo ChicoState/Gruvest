@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from . import models
-
+from datetime import date
 
 def must_be_unique(value):
     user = User.objects.filter(email=value)
@@ -63,6 +63,23 @@ class AddFundsForm(forms.ModelForm):
         fields = [
            "funds",
         ]
+
+class StocksForm(forms.ModelForm):
+    # meta class
+    class Meta:
+        # model to be used
+        model = models.StocksModel
+        # fields to be used
+        fields = [
+           "ticker",
+        ]
+        def save(self, request):
+            stock_instance = models.StocksModel()
+            stock_instance.ticker = self.cleaned_data["ticker"]
+            stock_instance.pitcher = request.user
+            #stock_instance.date = date.today()
+            stock_instance.save()
+            return stock_instance
 
 
 class RegistrationForm(UserCreationForm):

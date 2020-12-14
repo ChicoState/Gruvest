@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+
 # Create your models here.
 
 '''Post Model is now the User Page'''
@@ -17,11 +18,6 @@ class UserModel(models.Model):
     #stocks = models.ForeignKey(StocksModel, on_delete=models.CASCADE) # what does CASCADE mean?
 
     # how to go about function that calculates portfolio?
-
-    # pitcher rankings
-    comparisonSP500 = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    comparisonGruvest = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
-    userFeedback = models.DecimalField(max_digits=1, decimal_places=1, default=0.0)
 
     upVotes = models.IntegerField(default=0)
     downVotes = models.IntegerField(default=0)
@@ -54,13 +50,13 @@ class UserModel(models.Model):
 
 # Contains stocks
 class StocksModel(models.Model):
-    name = models.CharField(max_length=100)
     ticker = models.CharField(max_length=10)
     date = models.DateTimeField(auto_now_add=True)
-    closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
-    percentageChange = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
+    pitcher = models.ForeignKey(User, on_delete=models.CASCADE, related_name='stock_user')
+    #category = models.CharField(max_length=4, choices=options, default=1)
+    #closingPrice = models.DecimalField(max_digits=4, decimal_places=2, default=0.0)
 
-
+'''
 # Contains list of all tracked stocks for pitcher
 class TrackedStocksModel(models.Model):
     pitcher = models.ForeignKey(UserModel, on_delete=models.CASCADE) # 1:1 with pitcher
@@ -76,11 +72,11 @@ class TrackedStocksModel(models.Model):
     # tracks accuracy of stock % inc/dec
     #accuracy = models.DecimalField(max_digits=3, decimal_places=2, default=0.0)
 
-    '''
+    
     BUY = 0
     HOLD = 1
     SELL = 2
-    '''
+    
     options = [
         (0, 'BUY'),
         (1, 'HOLD'),
@@ -90,7 +86,7 @@ class TrackedStocksModel(models.Model):
 
     def getOptions(self):
         return self.options
-
+'''
 
 class CommentModel(models.Model):
     comment = models.CharField(max_length=240)

@@ -39,6 +39,7 @@
                 <li><a href="/post">Pitch!</a></li>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'addFunds' user.id %}">Add Money</a></li>
+                <li><a href="{% url 'addStocks' %}">Add Stocks</a></li>
                 {% endif %}
 
             </ul>
