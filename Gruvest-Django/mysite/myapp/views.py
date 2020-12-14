@@ -145,31 +145,46 @@ class UserDetail(LoginRequiredMixin, DetailView):
         except models.SubscribeModel.DoesNotExist:
             pass
 
-        #userstocks = models.StocksModel.objects.filter(pitcher=1)
+        userstocks = models.StocksModel.objects.filter(pitcher=post.pk)
 
-        #SUMdeltas = np.full(100, 0)
-        #for stock in userstocks:
-        #    pathway = "/myapp/CSV/" + stock.ticker.upper() + ".csv"
-        #    data = pd.read_csv(os.path.join(settings.BASE_DIR, pathway))
-        #    SUMpoints = data['4. close'].to_numpy()
+        SUMdeltas = np.full(100, 0)
+        total = 1
+        print("Sending Stock Deltas")
+        for stock in userstocks:
+            pathway = 'myapp/CSV/' + stock.ticker.upper() + '.csv'
+            data = pd.read_csv(os.path.join(settings.BASE_DIR, pathway))
+            SUMpoints = data['4. close'].to_numpy()
 
-        #    SUMdeltasX = np.full(100, SUMpoints[-1])
-        #    SUMdeltasX = 100*SUMpoints/SUMdeltasX-100
-        #    SUMdeltas = SUMdeltas + SUMdeltasX
-        data = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/AAPL.csv'))
+            SUMdeltasX = np.full(100, SUMpoints[-1])
+            SUMdeltasX = 100*SUMpoints/SUMdeltasX-100
+            SUMdeltas = SUMdeltas + SUMdeltasX
+            print(total, stock.ticker.upper()) #For debug purposes
+            total += 1
 
-        SUMpoints = data['4. close'].to_numpy()
+        SUMdeltas /= total
 
-        SUMdeltas = np.full(100, SUMpoints[-1])
-        SUMdeltas = 100*SUMpoints/SUMdeltas-100
-
-        SUMlabels = list(reversed([*range(len(SUMpoints))]))
+        SUMlabels = list(reversed([*range(len(SUMdeltas))]))
         SUMdeltas = list(reversed(SUMdeltas.tolist()))
+
+
+        #SPY section
+        SPYdata = pd.read_csv(os.path.join(settings.BASE_DIR, 'myapp/CSV/SPY.csv'))
+
+        SPYpoints = SPYdata['4. close'].to_numpy()
+
+        SPYdeltas = np.full(100, SPYpoints[-1])
+        SPYdeltas = 100*SPYpoints/SPYdeltas-100
+
+        SPYlabels = list(reversed([*range(len(SPYdeltas))]))
+        SPYdeltas = list(reversed(SPYdeltas.tolist()))
+
 
         context = {
             'object': post,
             'SUMlabels': SUMlabels,
-            'SUMdeltas': SUMdeltas
+            'SUMdeltas': SUMdeltas,
+			'SPYlabels': SPYlabels,
+			'SPYdeltas': SPYdeltas
         }
 
         if(is_subscribed or post.author == request.user):
